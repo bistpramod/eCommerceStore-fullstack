@@ -1,0 +1,198 @@
+# Networking Notes for Cybersecurity Beginners
+
+---
+
+## OSI Model (7 Layers)
+
+> Mnemonic (7→1): **A**ll **P**eople **S**eem **T**o **N**eed **D**ata **P**rocessing
+
+| # | Layer | What it does | Examples | Attack Surface |
+|---|-------|-------------|----------|----------------|
+| 7 | **Application** | User-facing protocols | HTTP, DNS, SMTP | XSS, SQLi |
+| 6 | **Presentation** | Encoding, encryption, compression | TLS, SSL, JPEG | SSL stripping |
+| 5 | **Session** | Opens/manages sessions | NetBIOS, RPC | Session hijacking |
+| 4 | **Transport** | End-to-end delivery, ports | TCP, UDP | Port scan, DoS |
+| 3 | **Network** | IP routing between networks | IP, ICMP, IPSec | IP spoofing |
+| 2 | **Data Link** | Frame transfer on same link | Ethernet, MAC | ARP spoofing |
+| 1 | **Physical** | Raw bits over cables/air | Wi-Fi, Ethernet | Tap, jamming |
+
+---
+
+## IP Addressing & Subnetting
+
+### IPv4 Private Ranges (RFC 1918)
+- **Class A** — `10.0.0.0/8` (large orgs)
+- **Class B** — `172.16.0.0/12` (medium)
+- **Class C** — `192.168.0.0/16` (home/SOHO)
+
+### CIDR Notation
+- `/24` = 256 IPs (254 usable)
+- `/16` = 65,536 IPs
+- `/32` = single host
+- First & last IPs in a subnet are reserved (network + broadcast)
+
+### Key Concepts
+- **NAT** — Translates private IPs to a public IP at the router. Private IPs never route on the internet.
+- **IPv6** — 128-bit addresses. `::1` = loopback. `fe80::` = link-local. Most networks run dual-stack (IPv4 + IPv6).
+
+---
+
+## Key Protocols & Ports
+
+| Port | Protocol | Notes |
+|------|----------|-------|
+| TCP 80 / 443 | HTTP / HTTPS | Web traffic. 443 = TLS encrypted |
+| TCP/UDP 53 | DNS | Resolves names → IPs. Common attack vector |
+| TCP 22 | SSH | Encrypted remote shell. Replaces Telnet |
+| TCP 23 | Telnet | Cleartext shell — **never use**, fully sniffable |
+| TCP 21 | FTP | Cleartext credentials — use SFTP instead |
+| TCP 25 | SMTP | Email sending. Abused for spam & phishing |
+| UDP 67/68 | DHCP | Auto-assigns IP, gateway, DNS to clients |
+| ICMP | Ping / Traceroute | Network diagnostics. Used in recon |
+| TCP 445 | SMB | Windows file sharing. EternalBlue target |
+| TCP 3389 | RDP | Windows remote desktop. Brute-force target |
+
+---
+
+## TCP 3-Way Handshake
+
+```
+Client          Server
+  |--- SYN ------->|   "I want to connect"
+  |<-- SYN-ACK ----|   "OK, acknowledged"
+  |--- ACK ------->|   "Connected!"
+```
+
+### Security relevance
+- **SYN flood attack** — Attacker sends thousands of SYNs but never sends the final ACK, exhausting the server's connection table (classic DoS).
+- **Nmap SYN scan (`-sS`)** — Sends SYN, gets SYN-ACK (open) or RST (closed), never completes the handshake. Stealthier than a full connect scan.
+
+---
+
+## DNS
+
+### Record Types
+| Record | Purpose |
+|--------|---------|
+| `A` | Hostname → IPv4 |
+| `AAAA` | Hostname → IPv6 |
+| `MX` | Mail servers |
+| `CNAME` | Alias → another hostname |
+| `PTR` | Reverse lookup (IP → name) |
+| `TXT` | Misc data (SPF, DMARC, verification) |
+
+### Security Relevance
+- **DNS poisoning** — Corrupt cache to redirect traffic to attacker-controlled IPs
+- **DNS tunneling** — Exfiltrate data encoded inside DNS queries
+- **Zone transfer** — Leaks all DNS records if misconfigured (`dig axfr`)
+- **Subdomain enumeration** — Recon technique using tools like `amass`, `subfinder`
+
+---
+
+## Common Network Attacks
+
+### ARP Spoofing / Man-in-the-Middle (MitM)
+Attacker poisons ARP cache so victim traffic flows through their machine. Enables interception, credential theft, SSL stripping.  
+**Defend:** Dynamic ARP Inspection (DAI), static ARP entries, encrypted protocols.
+
+### DDoS / DoS
+Flood target with traffic to exhaust resources. Variants: UDP flood, ICMP flood, SYN flood. Amplification attacks abuse misconfigured DNS/NTP servers to multiply traffic 10–50×.
+
+### Evil Twin / Rogue AP
+Attacker sets up a Wi-Fi hotspot with a legitimate-looking SSID. All client traffic is intercepted.  
+**Defend:** VPN on public Wi-Fi, verify certificates.
+
+### Packet Sniffing
+Capture network traffic with Wireshark or tcpdump. On unencrypted protocols (HTTP, FTP, Telnet) credentials are visible in plaintext.  
+**Defend:** Use TLS/SSH everywhere. No cleartext protocols.
+
+### Port Scanning & Reconnaissance
+Attacker maps open ports and running services before exploitation. Tools: `nmap`, `masscan`.  
+**Defend:** IDS/IPS, firewall logging, restrict unnecessary open ports.
+
+---
+
+## Defense — Tools & Concepts
+
+### Firewalls
+| Type | Description |
+|------|-------------|
+| Packet filter | Blocks by IP/port rules (stateless) |
+| Stateful | Tracks connection state |
+| WAF | Inspects HTTP, blocks SQLi/XSS at layer 7 |
+| NGFW | Deep packet inspection + application awareness |
+
+### IDS vs IPS
+- **IDS** — Detects & alerts (passive, out-of-band)
+- **IPS** — Detects & blocks (inline, active)
+- **Signature-based** — Matches known attack patterns
+- **Anomaly-based** — Flags deviations from baseline behaviour
+- Tools: Snort, Suricata, Zeek
+
+### Network Segmentation
+- **VLANs** — Logical network separation at layer 2
+- **DMZ** — Isolates public-facing servers from internal network
+- **Zero trust** — Verify every request regardless of source
+- Limits blast radius of a breach
+
+### Encryption in Transit
+- **TLS 1.3** — Current standard for HTTPS
+- **VPN** — IPSec or WireGuard tunnels for secure remote access
+- **SSH** — Secure shell, file transfer (SCP/SFTP), and tunneling
+- Always validate certificate chains; watch for self-signed certs in prod
+
+---
+
+## Essential CLI Tools
+
+```bash
+# Network scanning
+nmap -sS -sV 192.168.1.0/24        # SYN scan + service version detection
+nmap -A -T4 <target>               # Aggressive scan (OS, version, scripts)
+
+# Traffic capture
+tcpdump -i eth0 -w capture.pcap    # Capture traffic to file
+wireshark                          # GUI packet analysis
+
+# Open ports / listening services
+netstat -tulnp                     # Listening ports + processes (older)
+ss -tulnp                          # Modern replacement for netstat
+
+# DNS
+dig google.com ANY                 # All DNS record types
+dig axfr @ns1.target.com target.com  # Zone transfer attempt
+nslookup target.com                # Basic DNS lookup
+
+# Routing / path
+traceroute target.com              # Linux hop-by-hop path
+tracert target.com                 # Windows equivalent
+arp -a                             # Show ARP table
+
+# HTTP inspection
+curl -v https://site.com           # Verbose request + response headers
+curl -I https://site.com           # Headers only
+```
+
+---
+
+## Quick Reference — Attack → Layer
+
+| Attack | OSI Layer | Protocol Abused |
+|--------|-----------|-----------------|
+| SQL Injection | 7 — Application | HTTP |
+| SSL Stripping | 6 — Presentation | TLS |
+| Session Hijacking | 5 — Session | HTTP Cookies |
+| SYN Flood | 4 — Transport | TCP |
+| IP Spoofing | 3 — Network | IP |
+| ARP Spoofing | 2 — Data Link | ARP |
+| Cable tapping | 1 — Physical | Ethernet |
+
+---
+
+## Recommended Next Steps
+
+1. **Set up a home lab** — VirtualBox + Kali Linux + Metasploitable2
+2. **TryHackMe** — "Pre-Security" or "Jr Penetration Tester" path
+3. **Read packet captures** — Use Wireshark on your own traffic; inspect DNS, TLS handshakes, HTTP
+4. **Practice Nmap** — Scan your own lab network, learn to read the output
+5. **Study for CompTIA Network+** — Solid foundation cert before Security+
