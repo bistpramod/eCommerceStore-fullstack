@@ -13,19 +13,19 @@ const Signup = () => {
         setForm(
             {
                 ...form,
-                [e.target.name]: e.target.value //* target name is changed to value on handlechange
+                [e.target.name]: e.target.value //* its like email:email@gmail.com
             }
         )
 
     }
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault() // prevents the site from reloading when submitting
         try {
             const response = await api.post("/auth/signup", form)
             setMsg(response.data.message)
         }
         catch (error) {
-            setMsg(error.response?.data?.message || "something went wrong")
+            setMsg(error.response?.data?.message || "something went wrong") // ?. is optional chaining without ? js may crash if response is not available
         }
     }
     return (
