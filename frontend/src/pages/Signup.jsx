@@ -40,10 +40,10 @@ const Signup = () => {
       Sign up to continue
     </p>
 
-    {/* Message */}
+    {/* Message this is the alert message from backend that tells to user login succes or already esists*/} 
     {msg && (
-      <div className="mb-4 rounded-md bg-blue-50 p-3 text-center text-sm font-medium text-blue-600">
-        {msg}
+      <div className="mb-4 rounded-md bg-blue-50 p-3 text-center text-sm font-medium text-blue-600">  
+        {msg} 
       </div>
     )}
 
