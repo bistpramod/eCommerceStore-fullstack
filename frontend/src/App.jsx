@@ -36,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: '/admin/products/edit/:id',
     element: <EditProduct />
+  },
+  {
+    path: '*',
+    element: <h1>Page Not Found</h1>
   }
 ]);
 

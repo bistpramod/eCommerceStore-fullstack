@@ -1,22 +1,26 @@
 import { useState, useEffect } from "react";
-import api from "axios"
-import { Link } from "react-router"
+import api from "axios";
+import { Link } from "react-router-dom";
 
 export default function ProductList() {
     const [products, setProducts] = useState([])
 
-    const loadProducts = async () => { // api caller function 
-        const response = await api.get("/products") // response got from the backend 
+    const loadProducts = async () => {
+    try {
+        const response = await api.get("/products");
         setProducts(response.data);
+    } catch (error) {
+        console.error("Error loading products:", error);
     }
+};
     const deletedProduct = async (id) => {
         try {
-            await api.delete(`/produts/delete/${id}`);
+            await api.delete(`/products/delete/${id}`);
             alert("Product deleted successfully");
-            loadProducts(); // updated backend data is received from here which means the deleted product removed and newly sorted data  
+            await loadProducts(); // updated backend data is received from here which means the deleted product removed and newly sorted data  
         }
         catch (error) {
-            console.error("Error deletting the Product", err)
+            console.error("Error deleting the Product", error)
         }
     }
     useEffect(() => {
