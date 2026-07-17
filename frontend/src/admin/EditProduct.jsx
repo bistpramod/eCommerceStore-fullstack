@@ -4,7 +4,6 @@ import api from "../api/Axios";
 
 import { useNavigate, useParams } from "react-router-dom";
 
-
 export default function EditProduct() {
 
     // Get product id from URL
@@ -46,10 +45,19 @@ export default function EditProduct() {
             // Get products from backend
             const response = await api.get("/products");
 
-
-            // Find the product using URL id
-            const product = response.data.find(
-                (product) => product.id === Number(id)
+            // FIXED:
+            // Backend returns:
+            // {
+            //   message: "...",
+            //   success: true,
+            //   data: [...]
+            // }
+            // So the products array is inside response.data.data
+            const product = response.data.data.find(
+                // FIXED:
+                // MongoDB uses _id instead of id.
+                // URL parameter id is already a string, so no Number() conversion is needed.
+                (product) => product._id === id
             );
 
 
@@ -74,19 +82,20 @@ export default function EditProduct() {
 
 
     // Handles input changes
-    const handleChange = (e) => {
+   // Handles input changes
+const handleChange = (e) => {
 
-        setForm({
-            ...form,
+    setForm({
+        ...form,
 
-            // Dynamic object update
-            // Example:
-            // name="price" value="500"
-            // becomes price: "500"
-            [e.target.name]: e.target.value,
-        });
+        // Dynamic object update
+        // Example:
+        // name="price" value="500"
+        // becomes price: "500"
+        [e.target.name]: e.target.value,
+    });
 
-    };
+};
 
 
 
@@ -99,8 +108,10 @@ export default function EditProduct() {
 
         try {
 
-            // Update product using its id
-            await api.put(`/products/edit/${id}`, form);
+            // FIXED:
+            // Backend update route is:
+            // PUT /products/update/:id
+            await api.put(`/products/update/${id}`, form);
 
 
             alert("Product updated successfully");
@@ -151,6 +162,17 @@ export default function EditProduct() {
                             <input
                                 key={key}
                                 name={key}
+
+                                // FIXED:
+                                // Number inputs for numeric values.
+                                type={
+                                    key === "price" || key === "stock"
+                                        ? "number"
+                                        : key === "image"
+                                            ? "url"
+                                            : "text"
+                                }
+
                                 value={form[key]}
                                 onChange={handleChange}
                                 placeholder={
