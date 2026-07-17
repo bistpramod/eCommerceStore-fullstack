@@ -4,7 +4,7 @@ import api from "../api/Axios";
 import { useNavigate } from "react-router-dom";
 
 
-export function AddProduct() {
+export default function AddProduct() {
     const [form, setForm] = useState({
         title: "",
         description: "",

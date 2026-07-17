@@ -4,6 +4,9 @@ import Home from './pages/Home';
 import ProductDetails from './pages/ProductDetails';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
+import AddProduct from './admin/AddProduct';
+import EditProduct from './admin/EditProduct';
+import ProductList from './admin/ProductList';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +25,18 @@ const router = createBrowserRouter([
     path: '/signup',
     element: <Signup />,
   },
+  {
+    path: '/admin/products',
+    element: <ProductList />,
+  },
+  {
+    path: '/admin/products/add',
+    element: <AddProduct />
+  },
+  {
+    path: '/admin/products/edit/:id',
+    element: <EditProduct />
+  }
 ]);
 
 export default function App() {
