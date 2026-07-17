@@ -1,15 +1,19 @@
 import Product from "../models/product.model.js";
 
+
 //* create product
 export const createProduct = async (req, res) => {
   try {
-    const product = await Product.create(req, body);
-    res.json({
+    // FIXED: Use req.body instead of req, body
+    const product = await Product.create(req.body);
+
+    res.status(201).json({
       message: "Product created successfully",
       product,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
+
     return res.status(500).json({
       message: "Server error",
     });
