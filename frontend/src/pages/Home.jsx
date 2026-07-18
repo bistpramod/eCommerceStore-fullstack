@@ -1,45 +1,94 @@
-function Home() {
+import { useEffect, useState } from "react";
+
+import api from "../api/Axios"
+import { Link } from "react-router-dom"
+
+export default function Home() {
+  const [products, setProducts] = useState([]); // its array destructuring
+  const [search, setSearch] = useState("")
+  const [category, setCategory] = useState("")
+
+  const loadProducts = async () => {
+    try {
+      const response = await api.get(`/products?search=${search}&category=${category}`);
+
+      // FIXED: your backend sends the products inside response.data.data
+      setProducts(response.data.data);
+
+    }
+    catch (error) {
+      console.error("An error occured", error)
+    }
+
+  }
+
+  useEffect(() => {
+    loadProducts();
+
+  }, [search, category]);
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* Navbar */}
-      <nav className="bg-white shadow px-8 py-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-blue-600">
-          My App
-        </h1>
+    <>
+      <div className="min-h-screen bg-gray-100 p-6">
 
-        <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
-          Logout
-        </button>
-      </nav>
+        {/* search  */}
+        <div className="mx-auto mb-8 flex max-w-5xl flex-col gap-4 md:flex-row">
 
-      {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center">
-        <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Welcome 👋
-          </h2>
+          <input
+            placeholder="Search Products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 shadow-sm outline-none focus:border-blue-500"
+          />
 
-          <p className="text-gray-600 mb-6">
-            You have successfully logged in.
-          </p>
-
-          <div className="space-y-3">
-            <div className="bg-gray-100 p-3 rounded-lg">
-              <p className="font-medium">Name</p>
-              <p className="text-gray-500">John Doe</p>
-            </div>
-
-            <div className="bg-gray-100 p-3 rounded-lg">
-              <p className="font-medium">Email</p>
-              <p className="text-gray-500">
-                johndoe@example.com
-              </p>
-            </div>
-          </div>
+          {/* category filer / */}
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="rounded-lg border border-gray-300 bg-white px-4 py-3 shadow-sm outline-none focus:border-blue-500"
+          >
+            <option value="">All Categories</option>
+            <option value="fruits">Fruits</option>
+            <option value="electronics">Electronics</option>
+            <option value="smartphones">Smartphones</option>
+            <option value="Laptops">Laptops</option>
+          </select>
         </div>
-      </main>
-    </div>
+
+        {/* product grid */}
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+          {products.map((product) => (
+            <Link
+              key={product._id}
+              to={`/product/${product._id}`}
+              className="overflow-hidden rounded-xl bg-white shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+
+              <img
+                src={product.image}
+                alt={product.title}
+                className="h-56 w-full object-cover"
+              />
+
+              <div className="p-4">
+                <h2 className="mb-2 text-lg font-semibold text-gray-800">
+                  {product.title}
+                </h2>
+
+                <p className="text-xl font-bold text-green-600">
+                  ${product.price}
+                </p>
+              </div>
+
+            </Link>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 
-export default Home;
+
+
+// export default Home;
