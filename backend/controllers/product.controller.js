@@ -25,7 +25,16 @@ export const createProduct = async (req, res) => {
 export const getProducts = async (req, res) => {
   // fucntion returns multiple products
   try {
-    const products = await Product.find().sort({ createdAt: -1 }); // sorting in ascending order
+    const {search,category}= req.query;  //for filtering and searching
+    let filter = {};
+    if(search){
+      filter.title = { $regex: search , $options: 'i' }
+    }
+    if(category) {
+      filter.category= category;
+
+    }
+    const products = await Product.find(filter).sort({ createdAt: -1 }); // sorting in ascending order
 
     res.status(200).json({
       message: "All products fetched",
