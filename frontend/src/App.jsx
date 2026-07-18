@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import AddProduct from './admin/AddProduct';
 import EditProduct from './admin/EditProduct';
 import ProductList from './admin/ProductList';
+import NotFound from './pages/NotFound';
 
 const router = createBrowserRouter([
   {
@@ -39,7 +40,7 @@ const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <h1>Page Not Found</h1>
+    element: <NotFound />
   }
 ]);
 
