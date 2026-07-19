@@ -47,7 +47,24 @@ export default function Cart() {
     const total = cart.items.reduct((sum, item) => sum + item.productid.price * item.quantity, 0)
 
     return (<>
-            
+            <div>
+                <h1>Your Cart</h1>
+                {
+                    cart.items.length ===0?(
+                    <div>Your cart is empty</div>
+                    ):(
+                        <div>
+                          {cart.items.map((item)=>(
+                            <div key={item.productId._id}>
+                                <div>
+                                    <img src={item.productId.image} alt={image.productId.title} />
+                                </div>
+                            </div>
+                          ))}  
+                        </div>
+                    )
+                }
+            </div>
     </>)
 
 }
