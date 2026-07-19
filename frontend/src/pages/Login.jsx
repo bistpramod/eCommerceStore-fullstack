@@ -38,7 +38,7 @@ export default function Login() {
 
       //* save tokens to local storage
       localStorage.setItem("token", response.data.token);
-
+      localStorage.setItem("userId", response.data.id)
       setMsg("login Successful")
 
       //* redirect to the landing page only after 1 sec

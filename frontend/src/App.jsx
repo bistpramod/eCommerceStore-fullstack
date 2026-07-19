@@ -9,6 +9,7 @@ import ProductList from './admin/ProductList';
 import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Layout from '../layout/Layout';
+import Cart from './pages/Cart';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: '/admin/products/edit/:id',
         element: <EditProduct />
+      },
+      {
+        path:'/cart',
+        element: <Cart/>
       },
       {
         path: '*',
