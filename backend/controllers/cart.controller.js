@@ -63,15 +63,24 @@ export const updateCart = async (req, res) => {
       return res.status(404).json({ message: "Item not found" });
     }
     item.quantity = quantity;
-    await cart.save()
+    await cart.save();
 
     res.json({
-        message:'Item quantity updated',
-        cart,
-    })
+      message: "Item quantity updated",
+      cart,
+    });
   } catch (error) {
     console.error("Something went wrong", error);
   }
 };
 
-
+//* Get cart by user ID
+export const getCart = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const cart = await Cart.findOne({ userId }).populate("items.productId");
+    res.json(cart);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error", error });
+  }
+};
