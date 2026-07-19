@@ -7,39 +7,47 @@ import AddProduct from './admin/AddProduct';
 import EditProduct from './admin/EditProduct';
 import ProductList from './admin/ProductList';
 import NotFound from './pages/NotFound';
+import Navbar from './components/Navbar';
+import Layout from '../layout/Layout';
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <Home />,
-  },
-  {
-    path: '/product/:id',
-    element: <ProductDetails />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/signup',
-    element: <Signup />,
-  },
-  {
-    path: '/admin/products',
-    element: <ProductList />,
-  },
-  {
-    path: '/admin/products/add',
-    element: <AddProduct />
-  },
-  {
-    path: '/admin/products/edit/:id',
-    element: <EditProduct />
-  },
-  {
-    path: '*',
-    element: <NotFound />
+    element: <Layout />,
+    children: [
+      {
+        path: '/',
+        element: <Home />,
+      },
+      {
+        path: '/product/:id',
+        element: <ProductDetails />,
+      },
+      {
+        path: '/login',
+        element: <Login />,
+      },
+      {
+        path: '/signup',
+        element: <Signup />,
+      },
+      {
+        path: '/admin/products',
+        element: <ProductList />,
+      },
+      {
+        path: '/admin/products/add',
+        element: <AddProduct />
+      },
+      {
+        path: '/admin/products/edit/:id',
+        element: <EditProduct />
+      },
+      {
+        path: '*',
+        element: <NotFound />
+      }
+    ]
+
   }
 ]);
 

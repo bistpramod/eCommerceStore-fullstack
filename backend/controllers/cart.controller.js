@@ -18,9 +18,7 @@ export const addToCart = async (req, res) => {
       });
     } else {
       // Find the item in the existing cart
-      item = cart.items.find(
-        (i) => i.productId.toString() === productId
-      );
+      item = cart.items.find((i) => i.productId.toString() === productId);
 
       if (item) {
         item.quantity += 1;
@@ -60,7 +58,7 @@ export const removeItem = async (req, res) => {
     }
 
     cart.items = cart.items.filter(
-      (item) => item.productId.toString() !== productId
+      (item) => item.productId.toString() !== productId,
     );
 
     await cart.save();
@@ -90,9 +88,7 @@ export const updateCart = async (req, res) => {
       });
     }
 
-    const item = cart.items.find(
-      (i) => i.productId.toString() === productId
-    );
+    const item = cart.items.find((i) => i.productId.toString() === productId);
 
     if (!item) {
       return res.status(404).json({
@@ -131,9 +127,7 @@ export const getCart = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const cart = await Cart.findOne({ userId }).populate(
-      "items.productId"
-    );
+    const cart = await Cart.findOne({ userId }).populate("items.productId");
 
     if (!cart) {
       return res.status(404).json({

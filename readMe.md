@@ -17,7 +17,7 @@ The app lets users sign up / log in, browse products, filter by search and categ
 - Product listing with search and category filtering
 - Product details page
 - Admin interfaces for adding, editing, and deleting products
-- Separate frontend and backend codebases for easier reuse and scaling
+- Separate frontend and backend codeWQbases for easier reuse and scaling
 
 ## How the Flow Works
 
