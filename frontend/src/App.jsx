@@ -10,6 +10,9 @@ import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Layout from '../layout/Layout';
 import Cart from './pages/Cart';
+import CheckoutAddress from './pages/CheckoutAddress';
+import Checkout from './pages/Checkout';
+
 
 const router = createBrowserRouter([
   {
@@ -44,12 +47,20 @@ const router = createBrowserRouter([
         element: <EditProduct />
       },
       {
-        path:'/cart',
-        element: <Cart/>
+        path: '/cart',
+        element: <Cart />
       },
       {
         path: '*',
         element: <NotFound />
+      },
+      {
+        path: "/checkout-address",
+        element: <CheckoutAddress />
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />
       }
     ]
 
