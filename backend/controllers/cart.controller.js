@@ -129,9 +129,11 @@ export const getCart = async (req, res) => {
 
     const cart = await Cart.findOne({ userId }).populate("items.productId");
 
+    // FIX: no cart yet isn't an error — return an empty cart instead of 404
     if (!cart) {
-      return res.status(404).json({
-        message: "Cart not found",
+      return res.status(200).json({
+        userId,
+        items: [],
       });
     }
 

@@ -34,11 +34,12 @@ export default function Login() {
     try {
       const response = await api.post('/auth/login', form)
 
-      console.log(response, "data")
+      console.log(response.data);
 
       //* save tokens to local storage
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("userId", response.data.id)
+      // FIX: get id from response.data.user
+      localStorage.setItem("userId", response.data.user.id)
       setMsg("login Successful")
 
       //* redirect to the landing page only after 1 sec

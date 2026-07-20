@@ -13,7 +13,7 @@ export default function Cart() {
         try {
             const response = await api.get(`/cart/${userId}`);
 
-            // FIX: setcart -> setCart
+            //  setcart -> setCart
             setCart(response.data);
 
         } catch (error) {
