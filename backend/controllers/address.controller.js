@@ -1,4 +1,4 @@
-import Address from "../models/address.model";
+import Address from "../models/address.model.js";
 
 //* save address
 export const saveAddress = async (req, res) => {
@@ -17,7 +17,7 @@ export const saveAddress = async (req, res) => {
 export const getAddress = async (req, res) => {
   try {
     const addresses = await Address.find({
-      userid: req.params.userId,
+      userId: req.params.userId,
     });
     res.json(addresses);
   } catch (error) {

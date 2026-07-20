@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
 const addressSchema = new mongoose.Schema({
-    userid:{
+    userId:{ // capital user id
         type:mongoose.Schema.Types.ObjectId,
         required:true,
         ref:'User'

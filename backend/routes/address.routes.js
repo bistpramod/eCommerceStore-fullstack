@@ -1,11 +1,9 @@
-import express from "express"
+import express from "express";
+import { saveAddress, getAddress } from "../controllers/address.controller.js";
 
+const router = express.Router();
 
-import { saveAddress,getAddress } from "../controllers/address.controller"
+router.post("/add", saveAddress);
+router.get("/:userId", getAddress);
 
-const router = express.Router()
-
-router.post('/add',saveAddress)
-router.post('/:userId', getAddress)
-
-export default routerl;
+export default router;
