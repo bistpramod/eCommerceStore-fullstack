@@ -5,7 +5,10 @@ import connectDB from "./config/database.js";
 import authRoutes from "./routes/auth.routes.js"
 import productRoutes from './routes/product.routes.js'
 import cartRoutes from './routes/cart.routes.js'
+import addressRoutes from './routes/address.routes.js'
+
 dotenv.config();
+
 
 const app = express();
 
@@ -14,6 +17,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes)
 app.use('/api/products',productRoutes)
 app.use('/api/cart', cartRoutes)
+app.use('/apo/address',addressRoutes)
 connectDB();
 
 app.listen(5002, () => {
