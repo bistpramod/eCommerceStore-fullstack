@@ -170,3 +170,9 @@ npm run dev
 
 -when adding  a new backend feature, note the route, controller, model, and any new environment values.
 - for frontend page or component, note the route, purpose, and which API endpoints it calls.
+
+
+
+# cart done 
+# address backend done , 
+# address forntendd+checkout thing 
