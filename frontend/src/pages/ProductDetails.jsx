@@ -61,7 +61,8 @@ export default function ProductDetails() {
             </p>
 
             <button
-              className="cursor-pointer rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
+              onClick={() => addToCart(product._id)}
+              className="mx-4 mb-4 w-[calc(100%-2rem)] rounded-lg bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700"
             >
               Add to Cart
             </button>
