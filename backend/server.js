@@ -5,7 +5,7 @@ import connectDB from "./config/database.js";
 import authRoutes from "./routes/auth.routes.js"
 import productRoutes from './routes/product.routes.js'
 import cartRoutes from './routes/cart.routes.js'
-import addressRoutes from './routes/address.routes.js'
+import addressRoutes from "./models/address.model.js";
 
 dotenv.config();
 
