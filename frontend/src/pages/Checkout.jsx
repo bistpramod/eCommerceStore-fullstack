@@ -18,10 +18,16 @@ export default function Checkout() {
             return;
         }
 
-        api.get(`/cart/${userId}`).then((res) => setCart(res.data));
-        api.get(`/address/${userId}`).then((res) => {
-            setSelectedAddress(res.data[0]); // Default to first address
-        });
+        api.get(`/cart/${userId}`)
+            .then((res) => setCart(res.data))
+            .catch((err) => console.error("Failed to load cart:", err));
+
+        api.get(`/address/${userId}`)
+            .then((res) => {
+                setAddress(res.data);
+                setSelectAddress(res.data[0]);
+            })
+            .catch((err) => console.error("Failed to load address:", err));
     }, []);
     if (!cart) {
         return (
@@ -38,16 +44,23 @@ export default function Checkout() {
     );
 
     const placeOrder = async () => {
-        if (!selectAddress) {
-            alert("Please select an address")
-            return;
+    if (!selectAddress) {
+        alert("Please select an address");
+        return;
+    }
 
-        }
+    try {
         const response = await api.post("/order/place", {
             userId,
             address: selectAddress,
-        })
+        });
+
+        navigate(`/order-success/${response.data.order._id}`);
+    } catch (err) {
+        console.error("Failed to place order:", err);
+        alert("Something went wrong placing your order.");
     }
+};
 
     return (
         <div className="min-h-screen bg-gray-100 px-4 py-10">

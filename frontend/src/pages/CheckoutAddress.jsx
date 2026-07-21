@@ -22,8 +22,7 @@ export default function CheckoutAddress() {
     });
   };
 
-  // FIX: this is now a real, callable function (was trapped inside handleChange before,
-  // which is what would have crashed the app)
+ 
   const saveAddress = async () => {
     try {
       await api.post("/address/add", {
