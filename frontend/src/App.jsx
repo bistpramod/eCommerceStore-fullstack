@@ -12,7 +12,7 @@ import Layout from '../layout/Layout';
 import Cart from './pages/Cart';
 import CheckoutAddress from './pages/CheckoutAddress';
 import Checkout from './pages/Checkout';
-
+import OrderSuccess from './pages/OrderSuccess';
 
 const router = createBrowserRouter([
   {
@@ -61,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: "/checkout",
         element: <Checkout />
+      },
+      {
+        path:"/order-success/:id",
+        element:<OrderSuccess/>
       }
     ]
 
