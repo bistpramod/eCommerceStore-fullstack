@@ -178,4 +178,9 @@ npm run dev
 # address forntend + checkout thing 
 # order placement is due
 
+
 #### The basic structure and all the required things are implemented , now the only task is to modify the layout of the site using the previous logic
+
+
+
+# The final polishing for the css is remaining
