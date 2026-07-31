@@ -184,3 +184,5 @@ npm run dev
 
 
 # The final polishing for the css is remaining
+
+## order placement is due
