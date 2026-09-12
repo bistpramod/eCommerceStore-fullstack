@@ -1,6 +1,6 @@
 import multer from "multer";
 // this is the multer middleware
-// Keep the image in memory before sending it to Cloudinary
+
 const storage = multer.memoryStorage();
 
 const upload = multer({

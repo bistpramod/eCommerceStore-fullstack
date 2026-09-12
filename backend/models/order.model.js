@@ -5,7 +5,7 @@ const orderSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
     },
-    items: [ // FIX: was "itms" (typo) - controller saves as "items", so this was silently dropping order items
+    items: [
       {
         productId: {
           type: mongoose.Schema.Types.ObjectId,
@@ -30,7 +30,7 @@ const orderSchema = new mongoose.Schema(
       default: "COD",
     },
     status: {
-      type: String, // FIX: was missing - Mongoose needs a "type" key, not just "default"
+      type: String, 
       default: "placed",
     },
   },
