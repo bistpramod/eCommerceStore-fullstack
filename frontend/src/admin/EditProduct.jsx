@@ -1,206 +1,182 @@
 import { useEffect, useState } from "react";
-
 import api from "../api/Axios";
-
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function EditProduct() {
-
-    // Get product id from URL
-    // Example: /admin/products/edit/5
-    // id will be "5"
     const { id } = useParams();
-
-
-    // Used to redirect after updating product
     const navigate = useNavigate();
 
-
-    // Stores product information inside the form
     const [form, setForm] = useState({
         title: "",
         description: "",
         price: "",
         category: "",
-        image: "",
         stock: "",
     });
 
+    const [oldImage, setOldImage] = useState("");
+    const [image, setImage] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    // Only these fields can be edited
-    const allowedFields = [
-        "title",
-        "description",
-        "price",
-        "category",
-        "image",
-        "stock",
-    ];
-
-
-    // Loads existing product data when page opens
     const loadProduct = async () => {
         try {
-
-            // Get products from backend
             const response = await api.get("/products");
 
-            // FIXED:
-            // Backend returns:
-            // {
-            //   message: "...",
-            //   success: true,
-            //   data: [...]
-            // }
-            // So the products array is inside response.data.data
             const product = response.data.data.find(
-                // FIXED:
-                // MongoDB uses _id instead of id.
-                // URL parameter id is already a string, so no Number() conversion is needed.
                 (product) => product._id === id
             );
 
-
-            // Put existing product data into form
             if (product) {
-                setForm(product);
+                setForm({
+                    title: product.title || "",
+                    description: product.description || "",
+                    price: product.price || "",
+                    category: product.category || "",
+                    stock: product.stock || "",
+                });
+
+                setOldImage(product.image || "");
             }
-
-
         } catch (error) {
             console.error("Error loading product:", error);
         }
     };
 
-
-    // Runs when component loads
-    // Also runs if id changes
     useEffect(() => {
         loadProduct();
     }, [id]);
 
-
-
-    // Handles input changes
-   // Handles input changes
-const handleChange = (e) => {
-
-    setForm({
-        ...form,
-
-        // Dynamic object update
-        // Example:
-        // name="price" value="500"
-        // becomes price: "500"
-        [e.target.name]: e.target.value,
-    });
-
-};
-
-
-
-    // Sends updated product to backend
-    const handleSubmit = async (e) => {
-
-        // Prevent browser refresh
-        e.preventDefault();
-
-
-        try {
-
-            // FIXED:
-            // Backend update route is:
-            // PUT /products/update/:id
-            await api.put(`/products/update/${id}`, form);
-
-
-            alert("Product updated successfully");
-
-
-            // Go back to product list page
-            navigate("/admin/products");
-
-
-        } catch (error) {
-
-            console.error("Error updating product:", error);
-
-        }
-
+    const handleChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
+        try {
+            setLoading(true);
+
+            const data = new FormData();
+
+            Object.keys(form).forEach((key) => {
+                data.append(key, form[key]);
+            });
+
+            if (image) {
+                data.append("image", image);
+            }
+
+            await api.put(`/products/update/${id}`, data);
+
+            navigate("/admin/products");
+        } catch (error) {
+            console.error("Error updating product:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+        <div className="min-h-screen bg-gray-50 px-4 py-10">
+            <div className="mx-auto w-full max-w-xl rounded-2xl bg-white p-8 shadow-sm">
 
-            <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-
-
-                {/* Page heading */}
-                <h2 className="mb-2 text-center text-3xl font-bold text-gray-800">
+                <h2 className="text-3xl font-bold text-gray-800">
                     Edit Product
                 </h2>
 
-
-                <p className="mb-6 text-center text-sm text-gray-500">
-                    Update product details
+                <p className="mb-7 mt-1 text-sm text-gray-500">
+                    Update your product details
                 </p>
 
-
-
-                {/* Product edit form */}
                 <form onSubmit={handleSubmit} className="space-y-4">
 
+                    <input
+                        name="title"
+                        value={form.title}
+                        onChange={handleChange}
+                        placeholder="Product title"
+                        className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        required
+                    />
 
-                    {/* Creates inputs automatically from form object */}
-                    {Object.keys(form).map((key) => (
+                    <textarea
+                        name="description"
+                        value={form.description}
+                        onChange={handleChange}
+                        placeholder="Product description"
+                        rows="4"
+                        className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    />
 
-                        // Only render allowed editable fields
-                        allowedFields.includes(key) && (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <input
+                            type="number"
+                            name="price"
+                            value={form.price}
+                            onChange={handleChange}
+                            placeholder="Price"
+                            className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                            required
+                        />
 
-                            <input
-                                key={key}
-                                name={key}
+                        <input
+                            type="number"
+                            name="stock"
+                            value={form.stock}
+                            onChange={handleChange}
+                            placeholder="Stock"
+                            className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        />
+                    </div>
 
-                                // FIXED:
-                                // Number inputs for numeric values.
-                                type={
-                                    key === "price" || key === "stock"
-                                        ? "number"
-                                        : key === "image"
-                                            ? "url"
-                                            : "text"
-                                }
+                    <input
+                        name="category"
+                        value={form.category}
+                        onChange={handleChange}
+                        placeholder="Category"
+                        className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                    />
 
-                                value={form[key]}
-                                onChange={handleChange}
-                                placeholder={
-                                    key.charAt(0).toUpperCase() + key.slice(1)
-                                }
-                                className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                    {oldImage && (
+                        <div>
+                            <p className="mb-2 text-sm font-medium text-gray-700">
+                                Current image
+                            </p>
+
+                            <img
+                                src={oldImage}
+                                alt={form.title}
+                                className="h-40 w-full rounded-lg object-cover"
                             />
+                        </div>
+                    )}
 
-                        )
+                    <div className="rounded-lg border border-dashed border-gray-300 p-4">
+                        <p className="mb-2 text-sm font-medium text-gray-700">
+                            Replace image
+                        </p>
 
-                    ))}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setImage(e.target.files[0])}
+                            className="w-full text-sm text-gray-500"
+                        />
+                    </div>
 
-
-
-                    {/* Submit button */}
                     <button
                         type="submit"
-                        className="w-full rounded-lg bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700"
+                        disabled={loading}
+                        className="w-full rounded-lg bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        Update Product
+                        {loading ? "Updating..." : "Update Product"}
                     </button>
 
-
                 </form>
-
-
             </div>
-
         </div>
     );
 }

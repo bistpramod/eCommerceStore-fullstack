@@ -40,6 +40,7 @@ export default function Login() {
       localStorage.setItem("token", response.data.token);
       // FIX: get id from response.data.user
       localStorage.setItem("userId", response.data.user.id)
+      localStorage.setItem("role", response.data.user.role)
       setMsg("login Successful")
 
       //* redirect to the landing page only after 1 sec

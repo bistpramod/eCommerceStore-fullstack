@@ -7,18 +7,14 @@ import {
   updateCart,
 } from "../controllers/cart.controller.js";
 
+import { protect, sameUser } from "../middlewares/auth.middleware.js";
+
 const router = express.Router();
 
-//* Add item to cart
-router.post("/add", addToCart);
-
-//* Remove item from cart
-router.post("/remove", removeItem);
-
-//* Update item quantity in cart
-router.post("/update", updateCart);
-
-//* Get user cart
-router.get("/:userId", getCart);
+//* Cart routes need login
+router.post("/add", protect, sameUser, addToCart);
+router.post("/remove", protect, sameUser, removeItem);
+router.post("/update", protect, sameUser, updateCart);
+router.get("/:userId", protect, sameUser, getCart);
 
 export default router;
