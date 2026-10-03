@@ -47,10 +47,10 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="sticky top-0 z-50 border-b border-black/10 bg-[#f7f6f2]/95 backdrop-blur-xl">
+        <nav className="sticky top-0 z-50 border-b border-[#243029]/10 bg-[#f4f2ed]/95 backdrop-blur-xl">
             <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 lg:px-8">
                 <Link to="/" className="flex items-center gap-2.5">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1c1c1a] text-sm font-bold text-white">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#243029] text-sm font-bold text-white">
                         V
                     </span>
                     <span className="text-xl font-bold tracking-[-0.04em]">VividVistaa</span>
@@ -59,7 +59,7 @@ export default function Navbar() {
                 <div className="hidden items-center gap-8 md:flex">
                     <NavLink
                         to="/"
-                        className={({ isActive }) => `text-sm font-medium transition ${isActive ? "text-black" : "text-black/50 hover:text-black"}`}
+                        className={({ isActive }) => `text-sm font-medium transition ${isActive ? "text-[#243029]" : "text-[#243029]/50 hover:text-[#243029]"}`}
                     >
                         Shop
                     </NavLink>
@@ -67,7 +67,7 @@ export default function Navbar() {
                     {role === "admin" && (
                         <NavLink
                             to="/admin/products"
-                            className={({ isActive }) => `text-sm font-medium transition ${isActive ? "text-black" : "text-black/50 hover:text-black"}`}
+                            className={({ isActive }) => `text-sm font-medium transition ${isActive ? "text-[#243029]" : "text-[#243029]/50 hover:text-[#243029]"}`}
                         >
                             Products
                         </NavLink>
@@ -78,7 +78,7 @@ export default function Navbar() {
                     <Link
                         to="/cart"
                         aria-label="Shopping cart"
-                        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white transition hover:border-black/30"
+                        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#243029]/10 bg-[#fbfaf7] transition hover:border-[#243029]/30"
                     >
                         <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" stroke="currentColor" strokeWidth="1.8">
                             <path d="M3 4h2l2.2 10.1a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L21 7H6" />
@@ -87,7 +87,7 @@ export default function Navbar() {
                         </svg>
 
                         {cartCount > 0 && (
-                            <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e4572e] px-1 text-[10px] font-bold text-white">
+                            <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#a65f46] px-1 text-[10px] font-bold text-white">
                                 {cartCount}
                             </span>
                         )}
@@ -98,12 +98,12 @@ export default function Navbar() {
                             <Link to="/login" className="hidden px-3 py-2 text-sm font-semibold sm:block">
                                 Log in
                             </Link>
-                            <Link to="/signup" className="rounded-full bg-[#1c1c1a] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#e4572e]">
+                            <Link to="/signup" className="rounded-full bg-[#243029] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#a65f46]">
                                 Sign up
                             </Link>
                         </>
                     ) : (
-                        <button onClick={logout} className="rounded-full border border-black/15 bg-white px-4 py-2.5 text-sm font-semibold transition hover:border-black">
+                        <button onClick={logout} className="rounded-full border border-[#243029]/15 bg-[#fbfaf7] px-4 py-2.5 text-sm font-semibold transition hover:border-[#243029]">
                             Log out
                         </button>
                     )}

@@ -53,14 +53,14 @@ export default function Layout(){
     }, [location.pathname, location.search]);
 
     return(
-        <div className="min-h-screen bg-[#f7f6f2] text-[#1c1c1a]">
+        <div className="min-h-screen bg-[#f4f2ed] text-[#243029]">
             <Navbar />
             <main className="overflow-hidden">
                 <div className={`page-transition ${transition}`}>
                     {currentPage}
                 </div>
             </main>
-            <footer className="border-t border-black/10 bg-[#1c1c1a] px-5 py-8 text-[#f7f6f2]">
+            <footer className="border-t border-[#243029]/10 bg-[#243029] px-5 py-8 text-[#f4f2ed]">
                 <div className="mx-auto flex max-w-7xl flex-col gap-3 text-sm sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-lg font-bold tracking-tight">VividVistaa</p>
                     <p className="text-white/60">Everyday finds, picked with care.</p>

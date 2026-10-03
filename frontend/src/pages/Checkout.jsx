@@ -63,7 +63,7 @@ export default function Checkout() {
     if (loading) {
         return (
             <div className="flex min-h-[70vh] items-center justify-center">
-                <div className="h-10 w-10 animate-spin rounded-full border-4 border-black/10 border-t-black" />
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#243029]/10 border-t-black" />
             </div>
         );
     }
@@ -73,8 +73,8 @@ export default function Checkout() {
             <div className="flex min-h-[70vh] items-center justify-center px-5 text-center">
                 <div>
                     <h1 className="text-3xl font-bold">Your cart is empty</h1>
-                    <p className="mt-3 text-black/50">Add something to your cart before checking out.</p>
-                    <Link to="/" className="mt-6 inline-block rounded-full bg-[#1c1c1a] px-6 py-3 text-sm font-bold text-white">Back to shop</Link>
+                    <p className="mt-3 text-[#243029]/50">Add something to your cart before checking out.</p>
+                    <Link to="/" className="mt-6 inline-block rounded-full bg-[#243029] px-6 py-3 text-sm font-bold text-white">Back to shop</Link>
                 </div>
             </div>
         );
@@ -85,47 +85,47 @@ export default function Checkout() {
     return (
         <div className="px-5 py-10 lg:px-8 lg:py-14">
             <div className="mx-auto max-w-7xl">
-                <Link to="/cart" className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-black/50 transition hover:text-black">
+                <Link to="/cart" className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-[#243029]/50 transition hover:text-[#243029]">
                     <span>←</span> Back to cart
                 </Link>
 
                 <div className="mb-9">
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#e4572e]">Almost there</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#a65f46]">Almost there</p>
                     <h1 className="mt-2 text-4xl font-bold tracking-[-0.05em] sm:text-5xl">Checkout</h1>
                 </div>
 
                 {error && (
-                    <p className="mb-6 rounded-2xl bg-[#fff1eb] px-5 py-4 text-sm font-medium text-[#a73516]">{error}</p>
+                    <p className="mb-6 rounded-2xl bg-[#f3e7e2] px-5 py-4 text-sm font-medium text-[#8e4b39]">{error}</p>
                 )}
 
                 <div className="grid gap-7 lg:grid-cols-[1fr_390px]">
                     <div className="space-y-7">
-                        <section className="rounded-[2rem] bg-white p-6 sm:p-8">
+                        <section className="rounded-[2rem] bg-[#fbfaf7] p-6 sm:p-8">
                             <div className="flex items-center justify-between gap-4">
                                 <div>
-                                    <p className="text-xs font-bold uppercase tracking-widest text-black/40">Step 1</p>
+                                    <p className="text-xs font-bold uppercase tracking-widest text-[#243029]/40">Step 1</p>
                                     <h2 className="mt-1 text-2xl font-bold">Delivery address</h2>
                                 </div>
-                                <Link to="/checkout-address" className="rounded-full border border-black/15 px-4 py-2.5 text-xs font-bold transition hover:border-black">
+                                <Link to="/checkout-address" className="rounded-full border border-[#243029]/15 px-4 py-2.5 text-xs font-bold transition hover:border-[#243029]">
                                     + Add address
                                 </Link>
                             </div>
 
                             {addresses.length === 0 ? (
-                                <div className="mt-7 rounded-2xl border border-dashed border-black/20 p-7 text-center">
+                                <div className="mt-7 rounded-2xl border border-dashed border-[#243029]/20 p-7 text-center">
                                     <p className="font-bold">No saved address yet</p>
-                                    <p className="mt-1 text-sm text-black/50">Add one to continue with your order.</p>
+                                    <p className="mt-1 text-sm text-[#243029]/50">Add one to continue with your order.</p>
                                     <Link to="/checkout-address" className="mt-4 inline-block text-sm font-bold underline underline-offset-4">Add delivery address</Link>
                                 </div>
                             ) : (
                                 <div className="mt-7 grid gap-3 sm:grid-cols-2">
                                     {addresses.map((address) => (
-                                        <label key={address._id} className={`cursor-pointer rounded-2xl border p-5 transition ${selectedAddress?._id === address._id ? "border-[#4f7b53] bg-[#eef4e9]" : "border-black/10 hover:border-black/30"}`}>
+                                        <label key={address._id} className={`cursor-pointer rounded-2xl border p-5 transition ${selectedAddress?._id === address._id ? "border-[#607861] bg-[#e8eee6]" : "border-[#243029]/10 hover:border-[#243029]/30"}`}>
                                             <div className="flex items-start gap-3">
-                                                <input type="radio" name="address" checked={selectedAddress?._id === address._id} onChange={() => setSelectedAddress(address)} className="mt-1 accent-[#4f7b53]" />
+                                                <input type="radio" name="address" checked={selectedAddress?._id === address._id} onChange={() => setSelectedAddress(address)} className="mt-1 accent-[#607861]" />
                                                 <div>
                                                     <p className="font-bold">{address.fullName}</p>
-                                                    <p className="mt-2 text-sm leading-6 text-black/50">{address.addressLine}<br />{address.city}, {address.state} {address.pincode}<br />{address.phone}</p>
+                                                    <p className="mt-2 text-sm leading-6 text-[#243029]/50">{address.addressLine}<br />{address.city}, {address.state} {address.pincode}<br />{address.phone}</p>
                                                 </div>
                                             </div>
                                         </label>
@@ -134,20 +134,20 @@ export default function Checkout() {
                             )}
                         </section>
 
-                        <section className="rounded-[2rem] bg-white p-6 sm:p-8">
-                            <p className="text-xs font-bold uppercase tracking-widest text-black/40">Step 2</p>
+                        <section className="rounded-[2rem] bg-[#fbfaf7] p-6 sm:p-8">
+                            <p className="text-xs font-bold uppercase tracking-widest text-[#243029]/40">Step 2</p>
                             <h2 className="mt-1 text-2xl font-bold">Payment</h2>
-                            <div className="mt-6 flex items-center justify-between rounded-2xl border border-[#4f7b53] bg-[#eef4e9] p-5">
+                            <div className="mt-6 flex items-center justify-between rounded-2xl border border-[#607861] bg-[#e8eee6] p-5">
                                 <div>
                                     <p className="font-bold">Cash on delivery</p>
-                                    <p className="mt-1 text-sm text-black/50">Pay when your order arrives.</p>
+                                    <p className="mt-1 text-sm text-[#243029]/50">Pay when your order arrives.</p>
                                 </div>
-                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#4f7b53] text-xs text-white">✓</span>
+                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#607861] text-xs text-white">✓</span>
                             </div>
                         </section>
                     </div>
 
-                    <aside className="h-fit rounded-[2rem] bg-[#1c1c1a] p-7 text-white lg:sticky lg:top-24">
+                    <aside className="h-fit rounded-[2rem] bg-[#243029] p-7 text-white lg:sticky lg:top-24">
                         <h2 className="text-2xl font-bold">Your order</h2>
                         <div className="mt-6 max-h-72 space-y-4 overflow-auto border-b border-white/15 pb-6">
                             {cart.items.map((item) => (
@@ -170,7 +170,7 @@ export default function Checkout() {
                             </div>
                             <p className="text-3xl font-bold">${total.toFixed(2)}</p>
                         </div>
-                        <button onClick={placeOrder} disabled={placing || !selectedAddress} className="w-full rounded-full bg-[#f4b942] py-4 text-sm font-bold text-black transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40">
+                        <button onClick={placeOrder} disabled={placing || !selectedAddress} className="w-full rounded-full bg-[#d6bd83] py-4 text-sm font-bold text-[#243029] transition hover:bg-[#fbfaf7] disabled:cursor-not-allowed disabled:opacity-40">
                             {placing ? "Placing order..." : "Place order"}
                         </button>
                     </aside>
