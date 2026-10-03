@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../api/Axios.jsx";
 
@@ -47,64 +47,67 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-gray-100 bg-white/95 px-4 py-4 shadow-sm backdrop-blur md:px-8">
-
-            <Link
-                to="/"
-                className="text-2xl font-bold tracking-tight text-purple-600 transition hover:text-purple-800"
-            >
-                VividVistaa
-            </Link>
-
-            <div className="flex items-center gap-3 md:gap-5">
-
-                {role === "admin" && (
-                    <Link
-                        to="/admin/products"
-                        className="hidden rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 sm:block"
-                    >
-                        Admin
-                    </Link>
-                )}
-
-                <Link
-                    to="/cart"
-                    className="relative rounded-lg p-2 text-xl transition hover:bg-gray-100"
-                >
-                    🛒
-
-                    {cartCount > 0 && (
-                        <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
-                            {cartCount}
-                        </span>
-                    )}
+        <nav className="sticky top-0 z-50 border-b border-black/10 bg-[#f7f6f2]/95 backdrop-blur-xl">
+            <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 lg:px-8">
+                <Link to="/" className="flex items-center gap-2.5">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1c1c1a] text-sm font-bold text-white">
+                        V
+                    </span>
+                    <span className="text-xl font-bold tracking-[-0.04em]">VividVistaa</span>
                 </Link>
 
-                {!userId ? (
-                    <>
-                        <Link
-                            to="/login"
-                            className="rounded-lg border border-purple-600 px-3 py-2 text-sm text-purple-600 transition hover:bg-purple-600 hover:text-white md:px-4"
-                        >
-                            Login
-                        </Link>
-
-                        <Link
-                            to="/signup"
-                            className="rounded-lg bg-purple-600 px-3 py-2 text-sm text-white transition hover:bg-purple-700 md:px-4"
-                        >
-                            Signup
-                        </Link>
-                    </>
-                ) : (
-                    <button
-                        onClick={logout}
-                        className="rounded-lg bg-red-500 px-4 py-2 text-sm text-white transition hover:bg-red-600"
+                <div className="hidden items-center gap-8 md:flex">
+                    <NavLink
+                        to="/"
+                        className={({ isActive }) => `text-sm font-medium transition ${isActive ? "text-black" : "text-black/50 hover:text-black"}`}
                     >
-                        Logout
-                    </button>
-                )}
+                        Shop
+                    </NavLink>
 
+                    {role === "admin" && (
+                        <NavLink
+                            to="/admin/products"
+                            className={({ isActive }) => `text-sm font-medium transition ${isActive ? "text-black" : "text-black/50 hover:text-black"}`}
+                        >
+                            Products
+                        </NavLink>
+                    )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <Link
+                        to="/cart"
+                        aria-label="Shopping cart"
+                        className="relative flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white transition hover:border-black/30"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" stroke="currentColor" strokeWidth="1.8">
+                            <path d="M3 4h2l2.2 10.1a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L21 7H6" />
+                            <circle cx="9" cy="20" r="1" />
+                            <circle cx="18" cy="20" r="1" />
+                        </svg>
+
+                        {cartCount > 0 && (
+                            <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e4572e] px-1 text-[10px] font-bold text-white">
+                                {cartCount}
+                            </span>
+                        )}
+                    </Link>
+
+                    {!userId ? (
+                        <>
+                            <Link to="/login" className="hidden px-3 py-2 text-sm font-semibold sm:block">
+                                Log in
+                            </Link>
+                            <Link to="/signup" className="rounded-full bg-[#1c1c1a] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#e4572e]">
+                                Sign up
+                            </Link>
+                        </>
+                    ) : (
+                        <button onClick={logout} className="rounded-full border border-black/15 bg-white px-4 py-2.5 text-sm font-semibold transition hover:border-black">
+                            Log out
+                        </button>
+                    )}
+                </div>
             </div>
         </nav>
     );

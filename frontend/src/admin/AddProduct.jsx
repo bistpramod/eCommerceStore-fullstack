@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../api/Axios";
-import { useNavigate } from "react-router-dom";
 
 export default function AddProduct() {
     const [form, setForm] = useState({
@@ -8,30 +8,34 @@ export default function AddProduct() {
         description: "",
         price: "",
         category: "",
-        stock: ""
+        stock: "",
     });
-
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (localStorage.getItem("role") !== "admin") {
+            navigate("/");
+        }
+    }, [navigate]);
+
     const handleChange = (e) => {
         setForm({
             ...form,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
 
         try {
             setLoading(true);
+            setError("");
 
-            // FormData is needed because we are sending an image
             const data = new FormData();
 
             Object.keys(form).forEach((key) => {
@@ -43,10 +47,9 @@ export default function AddProduct() {
             }
 
             await api.post("/products/add", data);
-
             navigate("/admin/products");
         } catch (error) {
-            console.log("An error occurred while adding the product", error);
+            console.error("An error occurred while adding the product", error);
             setError(error.response?.data?.message || "Failed to add product");
         } finally {
             setLoading(false);
@@ -54,100 +57,61 @@ export default function AddProduct() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 px-4 py-10">
-            <div className="mx-auto w-full max-w-xl rounded-2xl bg-white p-8 shadow-sm">
+        <div className="px-5 py-10 lg:px-8 lg:py-14">
+            <div className="mx-auto max-w-4xl">
+                <Link to="/admin/products" className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-black/50 transition hover:text-black">
+                    <span>←</span> Back to products
+                </Link>
 
-                <h2 className="text-3xl font-bold text-gray-800">
-                    Add Product
-                </h2>
+                <div className="rounded-[2rem] bg-white p-6 sm:p-10">
+                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#e4572e]">New listing</p>
+                    <h1 className="mt-3 text-4xl font-bold tracking-[-0.05em]">Add product</h1>
+                    <p className="mt-3 text-sm text-black/50">Fill in the details customers need to know.</p>
 
-                <p className="mb-7 mt-1 text-sm text-gray-500">
-                    Add a new product to your store
-                </p>
+                    {error && <p className="mt-6 rounded-2xl bg-[#fff1eb] px-4 py-3 text-sm font-medium text-[#a73516]">{error}</p>}
 
-                {error && (
-                    <div className="mb-5 rounded-lg bg-red-50 p-3 text-sm text-red-600">
-                        {error}
-                    </div>
-                )}
+                    <form onSubmit={handleSubmit} className="mt-8 grid gap-6 md:grid-cols-2">
+                        <label className="block md:col-span-2">
+                            <span className="mb-2 block text-sm font-bold">Product title</span>
+                            <input name="title" value={form.title} onChange={handleChange} placeholder="What is the product called?" className="w-full rounded-2xl border border-black/15 bg-[#f7f6f2] px-4 py-3.5 outline-none transition focus:border-black focus:bg-white" required />
+                        </label>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                        <label className="block md:col-span-2">
+                            <span className="mb-2 block text-sm font-bold">Description</span>
+                            <textarea name="description" value={form.description} onChange={handleChange} placeholder="Tell customers about this product" rows="5" className="w-full resize-none rounded-2xl border border-black/15 bg-[#f7f6f2] px-4 py-3.5 outline-none transition focus:border-black focus:bg-white" />
+                        </label>
 
-                    <input
-                        name="title"
-                        value={form.title}
-                        onChange={handleChange}
-                        placeholder="Product title"
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                        required
-                    />
+                        <label className="block">
+                            <span className="mb-2 block text-sm font-bold">Price</span>
+                            <input type="number" name="price" value={form.price} onChange={handleChange} placeholder="0.00" min="0" step="0.01" className="w-full rounded-2xl border border-black/15 bg-[#f7f6f2] px-4 py-3.5 outline-none transition focus:border-black focus:bg-white" required />
+                        </label>
 
-                    <textarea
-                        name="description"
-                        value={form.description}
-                        onChange={handleChange}
-                        placeholder="Product description"
-                        rows="4"
-                        className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                    />
+                        <label className="block">
+                            <span className="mb-2 block text-sm font-bold">Stock</span>
+                            <input type="number" name="stock" value={form.stock} onChange={handleChange} placeholder="0" min="0" className="w-full rounded-2xl border border-black/15 bg-[#f7f6f2] px-4 py-3.5 outline-none transition focus:border-black focus:bg-white" required />
+                        </label>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
-                        <input
-                            type="number"
-                            name="price"
-                            value={form.price}
-                            onChange={handleChange}
-                            placeholder="Price"
-                            className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                            required
-                        />
+                        <label className="block md:col-span-2">
+                            <span className="mb-2 block text-sm font-bold">Category</span>
+                            <input name="category" value={form.category} onChange={handleChange} placeholder="For example: electronics" className="w-full rounded-2xl border border-black/15 bg-[#f7f6f2] px-4 py-3.5 outline-none transition focus:border-black focus:bg-white" />
+                        </label>
 
-                        <input
-                            type="number"
-                            name="stock"
-                            value={form.stock}
-                            onChange={handleChange}
-                            placeholder="Stock"
-                            className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                        />
-                    </div>
+                        <label className="block md:col-span-2">
+                            <span className="mb-2 block text-sm font-bold">Product image</span>
+                            <div className="rounded-2xl border border-dashed border-black/25 bg-[#f7f6f2] p-6 text-center transition hover:border-black/50">
+                                <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} className="w-full text-sm text-black/50 file:mr-4 file:rounded-full file:border-0 file:bg-[#1c1c1a] file:px-4 file:py-2.5 file:text-xs file:font-bold file:text-white" />
+                                {image && <p className="mt-3 text-xs font-semibold text-[#4f7b53]">Selected: {image.name}</p>}
+                            </div>
+                        </label>
 
-                    <input
-                        name="category"
-                        value={form.category}
-                        onChange={handleChange}
-                        placeholder="Category"
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                    />
-
-                    <div className="rounded-lg border border-dashed border-gray-300 p-4">
-                        <p className="mb-2 text-sm font-medium text-gray-700">
-                            Product image
-                        </p>
-
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setImage(e.target.files[0])}
-                            className="w-full text-sm text-gray-500"
-                        />
-
-                        {image && (
-                            <p className="mt-2 text-xs text-gray-500">
-                                Selected: {image.name}
-                            </p>
-                        )}
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full rounded-lg bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                        {loading ? "Adding Product..." : "Add Product"}
-                    </button>
-
-                </form>
+                        <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end md:col-span-2">
+                            <Link to="/admin/products" className="rounded-full border border-black/15 px-6 py-3.5 text-center text-sm font-bold transition hover:border-black">Cancel</Link>
+                            <button type="submit" disabled={loading} className="rounded-full bg-[#1c1c1a] px-7 py-3.5 text-sm font-bold text-white transition hover:bg-[#e4572e] disabled:opacity-50">
+                                {loading ? "Adding product..." : "Add product"}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );

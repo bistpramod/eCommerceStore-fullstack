@@ -7,7 +7,6 @@ import AddProduct from './admin/AddProduct';
 import EditProduct from './admin/EditProduct';
 import ProductList from './admin/ProductList';
 import NotFound from './pages/NotFound';
-import Navbar from './components/Navbar';
 import Layout from '../layout/Layout';
 import Cart from './pages/Cart';
 import CheckoutAddress from './pages/CheckoutAddress';
@@ -51,10 +50,6 @@ const router = createBrowserRouter([
         element: <Cart />
       },
       {
-        path: '*',
-        element: <NotFound />
-      },
-      {
         path: "/checkout-address",
         element: <CheckoutAddress />
       },
@@ -65,6 +60,10 @@ const router = createBrowserRouter([
       {
         path:"/order-success/:id",
         element:<OrderSuccess/>
+      },
+      {
+        path: '*',
+        element: <NotFound />
       }
     ]
 

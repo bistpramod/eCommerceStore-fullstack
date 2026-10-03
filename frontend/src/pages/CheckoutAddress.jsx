@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../api/Axios";
-import { useNavigate } from "react-router-dom";
 
 export default function CheckoutAddress() {
   const userId = localStorage.getItem("userId");
@@ -12,8 +12,16 @@ export default function CheckoutAddress() {
     addressLine: "",
     city: "",
     state: "",
-    pincode: "", 
+    pincode: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!userId) {
+      navigate("/login");
+    }
+  }, [userId, navigate]);
 
   const handleChange = (e) => {
     setForm({
@@ -22,51 +30,79 @@ export default function CheckoutAddress() {
     });
   };
 
- 
-  const saveAddress = async () => {
+  const saveAddress = async (e) => {
+    e.preventDefault();
+
     try {
+      setLoading(true);
+      setError("");
+
       await api.post("/address/add", {
         ...form,
         userId,
       });
 
       navigate("/checkout");
-    } catch (err) {
-      console.error("Failed to save address:", err);
+    } catch (error) {
+      console.error("Failed to save address:", error);
+      setError(error.response?.data?.message || "Could not save the address.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4 py-10">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+    <div className="px-5 py-10 lg:px-8 lg:py-14">
+      <div className="mx-auto max-w-3xl">
+        <Link to="/checkout" className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-black/50 transition hover:text-black">
+          <span>←</span> Back to checkout
+        </Link>
 
-        <h1 className="mb-2 text-center text-2xl font-bold text-gray-800">
-          Delivery Address
-        </h1>
-        <p className="mb-6 text-center text-sm text-gray-500">
-          Tell us where to send your order
-        </p>
+        <div className="rounded-[2rem] bg-white p-6 sm:p-10">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#e4572e]">Delivery details</p>
+          <h1 className="mt-3 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">Add a new address</h1>
+          <p className="mt-3 text-sm text-black/50">Enter the address where you would like to receive your order.</p>
 
-        <div className="space-y-4">
-          {Object.keys(form).map((key) => (
-            <input
-              key={key}
-              name={key}
-              value={form[key]}
-              onChange={handleChange}
-              placeholder={key}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            />
-          ))}
+          {error && (
+            <p className="mt-6 rounded-2xl bg-[#fff1eb] px-4 py-3 text-sm font-medium text-[#a73516]">{error}</p>
+          )}
+
+          <form onSubmit={saveAddress} className="mt-8 grid gap-5 sm:grid-cols-2">
+            <label className="block sm:col-span-2">
+              <span className="mb-2 block text-sm font-bold">Full name</span>
+              <input name="fullName" value={form.fullName} onChange={handleChange} placeholder="Name of the receiver" className="w-full rounded-2xl border border-black/15 bg-[#f7f6f2] px-4 py-3.5 outline-none transition focus:border-black focus:bg-white" required />
+            </label>
+
+            <label className="block sm:col-span-2">
+              <span className="mb-2 block text-sm font-bold">Phone number</span>
+              <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="Phone number" className="w-full rounded-2xl border border-black/15 bg-[#f7f6f2] px-4 py-3.5 outline-none transition focus:border-black focus:bg-white" required />
+            </label>
+
+            <label className="block sm:col-span-2">
+              <span className="mb-2 block text-sm font-bold">Street address</span>
+              <input name="addressLine" value={form.addressLine} onChange={handleChange} placeholder="House number and street" className="w-full rounded-2xl border border-black/15 bg-[#f7f6f2] px-4 py-3.5 outline-none transition focus:border-black focus:bg-white" required />
+            </label>
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-bold">City</span>
+              <input name="city" value={form.city} onChange={handleChange} placeholder="City" className="w-full rounded-2xl border border-black/15 bg-[#f7f6f2] px-4 py-3.5 outline-none transition focus:border-black focus:bg-white" required />
+            </label>
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-bold">State</span>
+              <input name="state" value={form.state} onChange={handleChange} placeholder="State" className="w-full rounded-2xl border border-black/15 bg-[#f7f6f2] px-4 py-3.5 outline-none transition focus:border-black focus:bg-white" required />
+            </label>
+
+            <label className="block sm:col-span-2">
+              <span className="mb-2 block text-sm font-bold">Postal code</span>
+              <input name="pincode" value={form.pincode} onChange={handleChange} placeholder="Postal code" className="w-full rounded-2xl border border-black/15 bg-[#f7f6f2] px-4 py-3.5 outline-none transition focus:border-black focus:bg-white" required />
+            </label>
+
+            <button type="submit" disabled={loading} className="mt-2 w-full rounded-full bg-[#1c1c1a] py-4 text-sm font-bold text-white transition hover:bg-[#e4572e] disabled:opacity-50 sm:col-span-2">
+              {loading ? "Saving address..." : "Save and continue"}
+            </button>
+          </form>
         </div>
-
-        <button
-          onClick={saveAddress}
-          className="mt-6 w-full rounded-lg bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700"
-        >
-          Save Address
-        </button>
-
       </div>
     </div>
   );

@@ -1,143 +1,164 @@
-import React, { useEffect, useState } from 'react'
-import api from "../api/Axios"
-import { useParams } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import api from "../api/Axios";
 
 export default function ProductDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState(false);
   const [error, setError] = useState("");
 
-  const loadProduct = async () => {
-    try {
-      const response = await api.get('/products/');
-
-      // backend sends products inside response.data.data
-      const productItem = response.data.data.find((item) => item._id === id);
-
-      setProduct(productItem);
-
-    } catch (error) {
-      console.error("An error occured", error);
-    }
-  }
-
   useEffect(() => {
-    loadProduct();
-  }, []);
+    api.get("/products")
+      .then((response) => {
+        const productItem = response.data.data.find((item) => item._id === id);
+        setProduct(productItem || null);
+      })
+      .catch((error) => {
+        console.error("An error occurred", error);
+        setError("We could not load this product.");
+      })
+      .finally(() => setLoading(false));
+  }, [id]);
 
-  // FIX: this function didn't exist before, so the button did nothing
-  const addToCart = async (productId) => {
+  const addToCart = async () => {
     const userId = localStorage.getItem("userId");
 
     if (!userId) {
-      setError("Please log in to add items to your cart.");
+      navigate("/login");
       return;
     }
 
-    setAdding(true);
-    setError("");
-
     try {
-      await api.post("/cart/add", {
-        userId,
-        productId,
-        quantity,
-      });
+      setAdding(true);
+      setError("");
+
+      for (let i = 0; i < quantity; i++) {
+        await api.post("/cart/add", {
+          userId,
+          productId: product._id,
+        });
+      }
 
       setAdded(true);
-      // reset the "Added" confirmation after a couple seconds
-      setTimeout(() => setAdded(false), 2000);
-
-    } catch (err) {
-      console.error("Failed to add item to cart:", err);
+      window.dispatchEvent(new Event("cartUpdated"));
+      setTimeout(() => setAdded(false), 1800);
+    } catch (error) {
+      console.error("Failed to add item to cart:", error);
       setError("Something went wrong. Please try again.");
     } finally {
       setAdding(false);
     }
+  };
+
+  if (loading) {
+    return (
+      <div className="mx-auto grid min-h-[70vh] max-w-7xl animate-pulse gap-10 px-5 py-12 lg:grid-cols-2 lg:px-8">
+        <div className="min-h-96 rounded-[2rem] bg-black/10" />
+        <div className="space-y-5 py-10">
+          <div className="h-5 w-24 rounded-full bg-black/10" />
+          <div className="h-14 rounded-full bg-black/10" />
+          <div className="h-24 rounded-3xl bg-black/10" />
+        </div>
+      </div>
+    );
   }
 
   if (!product) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-xl font-semibold text-gray-500">
-        Loading ...
+      <div className="flex min-h-[70vh] items-center justify-center px-5 text-center">
+        <div>
+          <p className="text-6xl font-bold text-black/10">?</p>
+          <h1 className="mt-4 text-3xl font-bold">Product not found</h1>
+          <p className="mt-2 text-black/50">{error || "This product may no longer be available."}</p>
+          <Link to="/" className="mt-6 inline-block rounded-full bg-[#1c1c1a] px-6 py-3 text-sm font-semibold text-white">
+            Back to shop
+          </Link>
+        </div>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="px-5 py-8 lg:px-8 lg:py-12">
+      <div className="mx-auto max-w-7xl">
+        <Link to="/" className="mb-7 inline-flex items-center gap-2 text-sm font-semibold text-black/55 transition hover:text-black">
+          <span>←</span> Back to shop
+        </Link>
 
-      <div className="mx-auto grid max-w-5xl gap-10 rounded-2xl bg-white p-8 shadow-md md:grid-cols-2">
-
-        <div className="overflow-hidden rounded-xl bg-gray-100">
-          <img
-            src={product.image}
-            alt={product.title}
-            className="h-96 w-full object-cover transition-transform duration-300 hover:scale-105"
-          />
-        </div>
-
-        <div className="flex flex-col justify-center">
-
-          <h1 className="mb-3 text-3xl font-bold tracking-tight text-gray-900">
-            {product.title}
-          </h1>
-
-          <p className="mb-6 leading-relaxed text-gray-600">
-            {product.description}
-          </p>
-
-          <p className="mb-6 text-3xl font-bold text-green-600">
-            ${product.price}
-          </p>
-
-          {/* Quantity selector */}
-          <div className="mb-6 flex items-center gap-4">
-            <span className="font-medium text-gray-700">Quantity</span>
-            <div className="flex items-center overflow-hidden rounded-lg border border-gray-300">
-              <button
-                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                className="px-4 py-2 text-lg font-semibold text-gray-600 transition hover:bg-gray-100"
-              >
-                −
-              </button>
-              <span className="w-10 text-center font-medium">{quantity}</span>
-              <button
-                onClick={() => setQuantity((q) => q + 1)}
-                className="px-4 py-2 text-lg font-semibold text-gray-600 transition hover:bg-gray-100"
-              >
-                +
-              </button>
-            </div>
+        <div className="grid overflow-hidden rounded-[2rem] bg-white lg:grid-cols-2">
+          <div className="flex min-h-[420px] items-center justify-center bg-[#ebe9e2] lg:min-h-[620px]">
+            {product.image ? (
+              <img src={product.image} alt={product.title} className="h-full max-h-[620px] w-full object-cover" />
+            ) : (
+              <p className="text-8xl font-bold text-black/10">{product.title?.charAt(0)}</p>
+            )}
           </div>
 
-          {error && (
-            <div className="mb-4 rounded-lg bg-red-50 px-4 py-2 text-sm font-medium text-red-600">
-              {error}
+          <div className="flex flex-col justify-center p-7 sm:p-12 lg:p-16">
+            <div className="flex items-center gap-3">
+              <span className="rounded-full bg-[#dfe8d2] px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider">
+                {product.category || "Everyday"}
+              </span>
+              <span className={`text-xs font-semibold ${product.stock > 0 ? "text-[#4f7b53]" : "text-[#e4572e]"}`}>
+                {product.stock > 0 ? "In stock" : "Out of stock"}
+              </span>
             </div>
-          )}
 
-          <button
-            onClick={() => addToCart(product._id)}
-            disabled={adding}
-            className={`w-full rounded-lg py-3 font-medium text-white shadow-sm transition
-              ${added
-                ? "bg-green-600 hover:bg-green-600"
-                : "bg-blue-600 hover:bg-blue-700"}
-              ${adding ? "cursor-not-allowed opacity-70" : ""}
-            `}
-          >
-            {adding ? "Adding..." : added ? "Added to Cart ✓" : "Add to Cart"}
-          </button>
+            <h1 className="mt-6 text-4xl font-bold leading-tight tracking-[-0.05em] sm:text-5xl">
+              {product.title}
+            </h1>
+            <p className="mt-5 text-3xl font-bold">${Number(product.price).toFixed(2)}</p>
+            <p className="mt-7 max-w-xl text-base leading-7 text-black/55">
+              {product.description || "A thoughtfully selected product made for everyday use."}
+            </p>
 
+            <div className="mt-9 border-y border-black/10 py-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-bold">Quantity</p>
+                <div className="flex items-center rounded-full border border-black/15 bg-[#f7f6f2] p-1">
+                  <button
+                    onClick={() => setQuantity((number) => Math.max(1, number - 1))}
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-lg transition hover:bg-white"
+                  >
+                    −
+                  </button>
+                  <span className="w-10 text-center text-sm font-bold">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity((number) => Math.min(product.stock, number + 1))}
+                    disabled={quantity >= product.stock}
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-lg transition hover:bg-white disabled:opacity-30"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {error && (
+              <p className="mt-5 rounded-2xl bg-[#fff1eb] px-4 py-3 text-sm font-medium text-[#a73516]">{error}</p>
+            )}
+
+            <button
+              onClick={addToCart}
+              disabled={adding || product.stock <= 0}
+              className={`mt-7 w-full rounded-full py-4 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:bg-black/20 ${added ? "bg-[#4f7b53]" : "bg-[#1c1c1a] hover:bg-[#e4572e]"}`}
+            >
+              {adding ? "Adding..." : added ? "Added to cart" : product.stock <= 0 ? "Out of stock" : `Add to cart · $${(product.price * quantity).toFixed(2)}`}
+            </button>
+
+            <div className="mt-6 grid grid-cols-2 gap-3 text-xs font-semibold text-black/45">
+              <p>✓ Secure checkout</p>
+              <p>✓ Cash on delivery</p>
+            </div>
+          </div>
         </div>
-
       </div>
-
     </div>
-  )
+  );
 }

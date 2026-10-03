@@ -1,110 +1,105 @@
-import React from 'react'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom' // FIX: changed from 'react-router' and removed unused Navigate import
-import api from '../api/Axios.jsx'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../api/Axios";
 
-
-// FIX: added component name
 export default function Login() {
-
-  // FIX: changed usestate -> useState
-  // FIX: changed name -> email because your input uses form.email
   const [form, setForm] = useState({
     email: "",
     password: "",
-  })
-
-  // FIX: changed usestate -> useState
-  const [msg, setMsg] = useState("")
+  });
+  const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
-
-    // FIX: changed preventDefualt() -> preventDefault()
     e.preventDefault();
 
     try {
-      const response = await api.post('/auth/login', form)
+      setLoading(true);
+      setMsg("");
 
-      console.log(response.data);
+      const response = await api.post("/auth/login", form);
 
-      //* save tokens to local storage
       localStorage.setItem("token", response.data.token);
-      // FIX: get id from response.data.user
-      localStorage.setItem("userId", response.data.user.id)
-      localStorage.setItem("role", response.data.user.role)
-      setMsg("login Successful")
+      localStorage.setItem("userId", response.data.user.id);
+      localStorage.setItem("role", response.data.user.role);
 
-      //* redirect to the landing page only after 1 sec
-      setTimeout(() => {
-        navigate('/')
-      }, 1000)
-
+      navigate("/");
     } catch (error) {
-      setMsg(error.response?.data?.message || "An error occured")
+      setMsg(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <>
-      <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
-        <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-
-          <h2 className="mb-2 text-center text-3xl font-bold text-gray-800">
-            Log in
-          </h2>
-
-          <p className="mb-6 text-center text-sm text-gray-500">
-            Log in to continue
-          </p>
-
-          {/* Message this is the alert message from backend that tells to user login succes or already esists */}
-          {msg && (
-            <div className="mb-4 rounded-md bg-blue-50 p-3 text-center text-sm font-medium text-blue-600">
-              {msg}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-              required
-            />
-
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={form.password}
-              onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-              required
-            />
-
-            <button
-              type="submit"
-              className="w-full rounded-lg bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700"
-            >
-              Log in
-            </button>
-
-          </form>
+    <div className="grid min-h-[calc(100vh-72px)] lg:grid-cols-2">
+      <div className="relative hidden overflow-hidden bg-[#e4572e] lg:block">
+        <div className="absolute -left-28 -top-20 h-96 w-96 rounded-full bg-[#f4b942]" />
+        <div className="absolute bottom-[-120px] right-[-50px] h-[430px] w-[430px] rounded-[7rem] bg-[#1c1c1a]" />
+        <div className="relative flex h-full flex-col justify-between p-14 text-white">
+          <p className="text-sm font-bold uppercase tracking-[0.22em]">Welcome back</p>
+          <h1 className="max-w-lg text-6xl font-bold leading-[0.98] tracking-[-0.06em]">
+            Your good finds are waiting.
+          </h1>
         </div>
       </div>
-    </>
-  )
+
+      <div className="flex items-center justify-center px-5 py-14 sm:px-10">
+        <div className="w-full max-w-md">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#e4572e]">Account</p>
+          <h2 className="mt-3 text-4xl font-bold tracking-[-0.05em]">Log in</h2>
+          <p className="mt-3 text-sm text-black/50">Enter your details to continue shopping.</p>
+
+          {msg && (
+            <div className="mt-6 rounded-2xl bg-[#fff1eb] px-4 py-3 text-sm font-medium text-[#a73516]">{msg}</div>
+          )}
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+            <label className="block">
+              <span className="mb-2 block text-sm font-bold">Email address</span>
+              <input
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={handleChange}
+                className="w-full rounded-2xl border border-black/15 bg-white px-4 py-3.5 outline-none transition focus:border-black"
+                required
+              />
+            </label>
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-bold">Password</span>
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                value={form.password}
+                onChange={handleChange}
+                className="w-full rounded-2xl border border-black/15 bg-white px-4 py-3.5 outline-none transition focus:border-black"
+                required
+              />
+            </label>
+
+            <button type="submit" disabled={loading} className="w-full rounded-full bg-[#1c1c1a] py-4 text-sm font-bold text-white transition hover:bg-[#e4572e] disabled:opacity-50">
+              {loading ? "Logging in..." : "Log in"}
+            </button>
+          </form>
+
+          <p className="mt-7 text-center text-sm text-black/50">
+            New here? <Link to="/signup" className="font-bold text-black underline underline-offset-4">Create an account</Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
