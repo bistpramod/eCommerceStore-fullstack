@@ -11,14 +11,16 @@ import { notFound, errorHandler } from "./middlewares/error.middleware.js";
 import { createAdmin } from "./controllers/auth.controller.js";
 
 const app = express();
+const normalizeOrigin = (origin) => origin?.trim().replace(/\/+$/, "");
+
 const allowedOrigins = [
   "http://localhost:5173",
   process.env.CLIENT_URL,
-].filter(Boolean);
+].filter(Boolean).map(normalizeOrigin);
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(normalizeOrigin(origin))) {
       return callback(null, true);
     }
 
