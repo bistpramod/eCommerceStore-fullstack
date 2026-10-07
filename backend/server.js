@@ -15,6 +15,7 @@ const normalizeOrigin = (origin) => origin?.trim().replace(/\/+$/, "");
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "https://vividvistaa-store.onrender.com",
   process.env.CLIENT_URL,
 ].filter(Boolean).map(normalizeOrigin);
 
