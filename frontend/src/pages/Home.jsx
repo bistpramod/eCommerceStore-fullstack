@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../api/Axios";
 
 const categoryItems = [
-  { value: "fruits", label: "Fresh picks", detail: "Everyday essentials", icon: "✦", color: "#fff0d6" },
-  { value: "electronics", label: "Electronics", detail: "Useful, reliable tech", icon: "⌁", color: "#e9edff" },
-  { value: "smartphones", label: "Smartphones", detail: "Stay connected", icon: "◫", color: "#f4e8ff" },
-  { value: "laptops", label: "Laptops", detail: "Work and create", icon: "▱", color: "#e5f9f2" },
+  { value: "fruits", label: "Fresh picks", detail: "Everyday pantry and produce" },
+  { value: "electronics", label: "Electronics", detail: "Practical technology" },
+  { value: "smartphones", label: "Smartphones", detail: "Devices and essentials" },
+  { value: "laptops", label: "Laptops", detail: "Tools for work and study" },
 ];
 
 export default function Home() {
@@ -64,109 +64,93 @@ export default function Home() {
   };
 
   const heroProduct = products[0];
-  const secondHeroProduct = products[1];
 
   return (
     <div>
-      <section className="relative overflow-hidden bg-[#fff8f3] px-5 py-14 sm:py-20 lg:py-24">
-        <div className="hero-orb absolute -left-24 top-20 h-72 w-72 rounded-full bg-[#ffcf5a]/35" />
-        <div className="hero-orb absolute -right-20 -top-24 h-[420px] w-[420px] rounded-full bg-[#cfc8ff]/55" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-          <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#ff5b57]/20 bg-white px-3.5 py-2 text-xs font-bold text-[#e94743] shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-[#ff5b57]" /> NEW FINDS ADDED WEEKLY
-            </div>
-            <h1 className="display-title max-w-3xl text-[clamp(3rem,6.5vw,6.3rem)]">
-              Better things for <span className="gradient-text">every day.</span>
+      <section className="border-b border-[#deddd6] px-5 py-10 sm:py-14 lg:py-16">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-stretch">
+          <div className="flex flex-col justify-center py-5 lg:pr-10">
+            <p className="section-kicker">The everyday collection</p>
+            <h1 className="display-title mt-5 max-w-2xl text-[clamp(3.25rem,7vw,6.8rem)]">
+              Well chosen.<br />Simply sold.
             </h1>
-            <p className="mt-6 max-w-xl text-base font-medium leading-7 text-[#66708f] sm:text-lg sm:leading-8">
-              A thoughtfully selected store for useful tech, daily essentials, and the little upgrades that make life easier.
+            <p className="mt-6 max-w-lg text-base leading-7 text-[#66675f]">
+              Useful products with clear prices, honest stock information, and a checkout that stays out of your way.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <button onClick={() => goToCollection()} className="store-button bg-[#5368ef] px-6 py-4 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#4358dc]">Shop the collection <span className="ml-2">→</span></button>
-              <button onClick={() => document.getElementById("categories")?.scrollIntoView()} className="store-button border border-[#dfe2ed] bg-white px-6 py-4 text-sm font-bold text-[#19203a] transition hover:-translate-y-0.5 hover:border-[#5368ef]">Browse categories</button>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button onClick={() => goToCollection()} className="store-button bg-[#171813] px-6 py-3.5 text-sm font-medium text-white transition hover:bg-[#6f7655]">Shop all products</button>
+              <button onClick={() => document.getElementById("categories")?.scrollIntoView()} className="store-button border border-[#cfcec6] bg-transparent px-6 py-3.5 text-sm font-medium transition hover:border-[#171813]">Browse categories</button>
             </div>
-            <div className="mt-9 flex flex-wrap gap-x-7 gap-y-3 text-xs font-semibold text-[#66708f]">
-              <span className="flex items-center gap-2"><b className="grid h-5 w-5 place-items-center rounded-full bg-[#e5f9f2] text-[#25856a]">✓</b> Easy checkout</span>
-              <span className="flex items-center gap-2"><b className="grid h-5 w-5 place-items-center rounded-full bg-[#e9edff] text-[#5368ef]">✓</b> Clear pricing</span>
-              <span className="flex items-center gap-2"><b className="grid h-5 w-5 place-items-center rounded-full bg-[#fff0d6] text-[#b77700]">✓</b> Cash on delivery</span>
+            <div className="mt-10 grid grid-cols-3 gap-4 border-t border-[#deddd6] pt-5 text-xs text-[#74756d]">
+              <span>Clear pricing</span><span>Secure account</span><span>Cash on delivery</span>
             </div>
           </div>
 
-          <div className="soft-grid relative min-h-[430px] rounded-[32px] border border-[#dfe2ed] bg-white/70 p-6 shadow-[0_35px_80px_-45px_rgba(83,104,239,0.55)] sm:min-h-[520px] sm:p-9">
-            <div className="absolute left-5 top-5 rounded-full bg-[#ffcf5a] px-4 py-2 text-xs font-extrabold text-[#19203a] shadow-sm sm:left-8 sm:top-8">THIS WEEK&rsquo;S FAVORITES</div>
-            <div className="absolute right-7 top-20 w-[62%] rotate-3 overflow-hidden rounded-[24px] border-[6px] border-white bg-[#f1f3fb] shadow-2xl sm:right-12 sm:top-24">
-              {heroProduct?.image ? <img src={heroProduct.image} alt={heroProduct.title} className="aspect-[4/5] w-full object-cover" /> : <div className="flex aspect-[4/5] items-center justify-center bg-gradient-to-br from-[#ffd1ce] via-[#eadbff] to-[#cbd5ff]"><span className="text-center text-3xl font-black text-white/90">NEW<br />GOODS</span></div>}
-              <div className="absolute inset-x-0 bottom-0 bg-white/92 p-4 backdrop-blur"><p className="truncate text-sm font-bold">{heroProduct?.title || "The everyday edit"}</p><p className="mt-1 text-xs font-semibold text-[#5368ef]">{heroProduct ? `$${Number(heroProduct.price).toFixed(2)}` : "Fresh arrivals"}</p></div>
+          <Link to={heroProduct ? `/product/${heroProduct._id}` : "/#products"} className="group relative min-h-[430px] overflow-hidden bg-[#e9e8e2] sm:min-h-[560px]">
+            {heroProduct?.image ? (
+              <img src={heroProduct.image} alt={heroProduct.title} className="h-full min-h-[430px] w-full object-cover transition duration-700 group-hover:scale-[1.02] sm:min-h-[560px]" />
+            ) : (
+              <div className="flex h-full min-h-[430px] items-center justify-center bg-[#deddd6] text-center text-4xl font-semibold tracking-[-0.05em] text-[#aaa99f] sm:min-h-[560px]">The new<br />collection</div>
+            )}
+            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 bg-gradient-to-t from-black/75 via-black/20 to-transparent p-6 pt-24 text-white sm:p-8">
+              <div><p className="text-[10px] uppercase tracking-[0.18em] text-white/65">Featured</p><h2 className="mt-2 text-2xl font-medium tracking-[-0.03em]">{heroProduct?.title || "Everyday essentials"}</h2></div>
+              <p className="shrink-0 text-lg font-medium">{heroProduct ? `$${Number(heroProduct.price).toFixed(2)}` : "View collection"}</p>
             </div>
-            <div className="absolute bottom-9 left-5 w-[45%] -rotate-6 overflow-hidden rounded-[20px] border-[5px] border-white bg-[#eefaf6] shadow-xl sm:bottom-12 sm:left-10">
-              {secondHeroProduct?.image ? <img src={secondHeroProduct.image} alt={secondHeroProduct.title} className="aspect-square w-full object-cover" /> : <div className="flex aspect-square items-center justify-center bg-gradient-to-br from-[#a7ead2] to-[#8aa4ff]"><span className="text-5xl text-white">✦</span></div>}
-            </div>
-            <div className="absolute bottom-6 right-3 rounded-2xl bg-[#a74de8] px-4 py-3 text-white shadow-lg sm:bottom-10 sm:right-7"><p className="text-[10px] font-bold uppercase tracking-wider text-white/70">Curated for you</p><p className="mt-1 text-sm font-extrabold">Good picks, less noise.</p></div>
-          </div>
+          </Link>
         </div>
       </section>
 
-      <section className="border-y border-[#e4e7f0] bg-white px-5 py-5">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-5 text-center sm:grid-cols-4">
-          {[['100%', 'clear prices'], ['4', 'easy categories'], ['Secure', 'account access'], ['Simple', 'cash on delivery']].map(([value, label]) => (
-            <div key={label} className="border-r border-[#e4e7f0] last:border-0"><p className="text-lg font-extrabold text-[#19203a]">{value}</p><p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8991a8]">{label}</p></div>
-          ))}
-        </div>
-      </section>
-
-      <section id="categories" className="scroll-mt-28 px-5 py-20 lg:py-24">
+      <section id="categories" className="scroll-mt-28 border-b border-[#deddd6] px-5 py-14 lg:py-18">
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div><p className="section-kicker">// Shop by category</p><h2 className="mt-3 text-3xl font-extrabold tracking-[-0.04em] sm:text-5xl">Start with what you need.</h2></div>
-            <button onClick={() => goToCollection()} className="w-fit text-sm font-bold text-[#5368ef] hover:text-[#e94743]">View everything →</button>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div><p className="section-kicker">Departments</p><h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">Shop by category</h2></div>
+            <button onClick={() => goToCollection()} className="w-fit text-sm text-[#66675f] underline decoration-[#b8b8af] underline-offset-4 hover:text-[#171813]">View everything</button>
           </div>
-          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {categoryItems.map((item) => (
-              <button key={item.value} onClick={() => goToCollection(item.value)} className="group store-card flex min-h-52 flex-col items-start p-5 text-left transition hover:-translate-y-1 hover:border-[#5368ef]/40 hover:shadow-[0_22px_50px_-32px_rgba(83,104,239,0.65)]">
-                <span className="grid h-14 w-14 place-items-center rounded-2xl text-2xl font-black text-[#19203a]" style={{ backgroundColor: item.color }}>{item.icon}</span>
-                <span className="mt-auto text-xl font-extrabold tracking-[-0.025em]">{item.label}</span>
-                <span className="mt-1 flex w-full items-center justify-between text-xs font-semibold text-[#8991a8]">{item.detail}<b className="text-lg text-[#5368ef] transition group-hover:translate-x-1">→</b></span>
+          <div className="mt-8 grid border-l border-t border-[#deddd6] sm:grid-cols-2 lg:grid-cols-4">
+            {categoryItems.map((item, index) => (
+              <button key={item.value} onClick={() => goToCollection(item.value)} className="group min-h-44 border-b border-r border-[#deddd6] bg-[#f7f6f2] p-6 text-left transition hover:bg-[#efeee8]">
+                <span className="text-[10px] font-medium text-[#92938a]">0{index + 1}</span>
+                <span className="mt-12 block text-lg font-medium">{item.label}</span>
+                <span className="mt-1 flex items-center justify-between text-xs text-[#787970]">{item.detail}<b className="font-normal transition group-hover:translate-x-1">→</b></span>
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="products" className="scroll-mt-28 bg-[#f6f7fb] px-5 py-20 lg:py-24">
+      <section id="products" className="scroll-mt-28 px-5 py-14 lg:py-20">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-7 lg:grid-cols-[1fr_auto] lg:items-end">
-            <div><p className="section-kicker">// Our products</p><h2 className="mt-3 text-3xl font-extrabold tracking-[-0.04em] sm:text-5xl">Picked for real life.</h2><p className="mt-3 max-w-xl text-sm font-medium leading-6 text-[#66708f]">Browse the full collection, search by name, or narrow it down to exactly what you came for.</p></div>
+            <div><p className="section-kicker">The collection</p><h2 className="mt-3 text-3xl font-semibold tracking-[-0.045em] sm:text-4xl">Products for real life</h2><p className="mt-3 max-w-xl text-sm leading-6 text-[#717269]">Search the catalogue or narrow the selection by department.</p></div>
             <div className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto">
-              <label className="relative block sm:w-72"><span className="sr-only">Search products</span><svg viewBox="0 0 24 24" fill="none" className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#8991a8]" stroke="currentColor" strokeWidth="1.9"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg><input type="search" placeholder="Search products" value={search} onChange={(event) => setSearch(event.target.value)} className="w-full rounded-xl border border-[#dfe2ed] bg-white py-3.5 pl-12 pr-4 text-sm font-medium outline-none transition focus:border-[#5368ef]" /></label>
-              <select value={sort} onChange={(event) => setSort(event.target.value)} aria-label="Sort products" className="rounded-xl border border-[#dfe2ed] bg-white px-4 py-3.5 text-sm font-bold outline-none focus:border-[#5368ef]"><option value="featured">Featured</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option></select>
+              <label className="relative block sm:w-72"><span className="sr-only">Search products</span><svg viewBox="0 0 24 24" fill="none" className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8d8e85]" stroke="currentColor" strokeWidth="1.8"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg><input type="search" placeholder="Search products" value={search} onChange={(event) => setSearch(event.target.value)} className="w-full border border-[#cfcec6] bg-[#f7f6f2] py-3 pl-11 pr-4 text-sm outline-none transition focus:border-[#171813]" /></label>
+              <select value={sort} onChange={(event) => setSort(event.target.value)} aria-label="Sort products" className="border border-[#cfcec6] bg-[#f7f6f2] px-4 py-3 text-sm outline-none focus:border-[#171813]"><option value="featured">Featured</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option></select>
             </div>
           </div>
 
-          <div className="mt-7 flex flex-wrap gap-2">
-            <button onClick={() => setCategory("")} className={`rounded-full px-4 py-2 text-xs font-bold transition ${category === "" ? "bg-[#19203a] text-white" : "border border-[#dfe2ed] bg-white text-[#66708f] hover:border-[#5368ef]"}`}>All products</button>
-            {categoryItems.map((item) => <button key={item.value} onClick={() => setCategory(item.value)} className={`rounded-full px-4 py-2 text-xs font-bold capitalize transition ${category === item.value ? "bg-[#5368ef] text-white" : "border border-[#dfe2ed] bg-white text-[#66708f] hover:border-[#5368ef]"}`}>{item.value}</button>)}
+          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-y border-[#deddd6] py-4">
+            <button onClick={() => setCategory("")} className={`text-xs transition ${category === "" ? "font-semibold text-[#171813]" : "text-[#77786f] hover:text-[#171813]"}`}>All products</button>
+            {categoryItems.map((item) => <button key={item.value} onClick={() => setCategory(item.value)} className={`text-xs capitalize transition ${category === item.value ? "font-semibold text-[#171813]" : "text-[#77786f] hover:text-[#171813]"}`}>{item.value}</button>)}
           </div>
 
           {loading ? (
-            <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{[1, 2, 3, 4].map((item) => <div key={item} className="store-card overflow-hidden p-3"><div className="aspect-[4/5] animate-pulse rounded-2xl bg-[#e9ebf3]" /><div className="mx-2 mt-5 h-5 animate-pulse rounded bg-[#e9ebf3]" /><div className="mx-2 mb-3 mt-3 h-4 w-1/3 animate-pulse rounded bg-[#e9ebf3]" /></div>)}</div>
+            <div className="mt-8 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{[1, 2, 3, 4].map((item) => <div key={item}><div className="aspect-[4/5] animate-pulse bg-[#e7e6df]" /><div className="mt-4 h-4 animate-pulse bg-[#e7e6df]" /><div className="mt-3 h-3 w-1/3 animate-pulse bg-[#e7e6df]" /></div>)}</div>
           ) : error ? (
-            <div className="store-card mt-9 border-[#ff5b57]/20 bg-[#fff5f4] p-12 text-center"><div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#ffe1df] text-xl">!</div><p className="mt-4 font-bold text-[#e94743]">{error}</p><button onClick={loadProducts} className="store-button mt-5 bg-[#5368ef] px-5 py-3 text-sm font-bold text-white">Try again</button></div>
+            <div className="mt-8 border border-[#d9cbc7] bg-[#f4ece9] p-12 text-center"><p className="font-medium text-[#754f43]">{error}</p><button onClick={loadProducts} className="store-button mt-5 bg-[#171813] px-5 py-3 text-sm text-white">Try again</button></div>
           ) : sortedProducts.length === 0 ? (
-            <div className="store-card mt-9 p-14 text-center"><h3 className="text-xl font-extrabold">No products found</h3><p className="mt-2 text-sm text-[#66708f]">Try a different search or category.</p><button onClick={() => { setSearch(""); setCategory(""); }} className="mt-5 text-sm font-bold text-[#5368ef]">Clear filters</button></div>
+            <div className="mt-8 border border-[#deddd6] p-14 text-center"><h3 className="text-xl font-medium">No products found</h3><p className="mt-2 text-sm text-[#717269]">Try a different search or category.</p><button onClick={() => { setSearch(""); setCategory(""); }} className="mt-5 text-sm underline underline-offset-4">Clear filters</button></div>
           ) : (
-            <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {sortedProducts.map((product, index) => (
-                <article key={product._id} className="product-card store-card group flex flex-col overflow-hidden p-3">
-                  <Link to={`/product/${product._id}`} className="relative block overflow-hidden rounded-2xl bg-[#eef0f7]">
-                    {product.image ? <img src={product.image} alt={product.title} className="product-image aspect-[4/5] w-full object-cover" /> : <div className="flex aspect-[4/5] items-center justify-center bg-gradient-to-br from-[#ffd8d5] via-[#eadbff] to-[#cdd7ff] text-6xl font-black text-white/80">{product.title?.charAt(0)}</div>}
-                    {index % 4 === 0 && <span className="absolute left-3 top-3 rounded-full bg-[#ffcf5a] px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#19203a]">Best pick</span>}
-                    <span className={`absolute right-3 top-3 h-2.5 w-2.5 rounded-full ring-4 ring-white/80 ${product.stock > 0 ? "bg-[#46cda0]" : "bg-[#ff5b57]"}`} title={product.stock > 0 ? "In stock" : "Out of stock"} />
+            <div className="mt-8 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {sortedProducts.map((product) => (
+                <article key={product._id} className="product-card group flex min-w-0 flex-col">
+                  <Link to={`/product/${product._id}`} className="relative block overflow-hidden bg-[#e9e8e2]">
+                    {product.image ? <img src={product.image} alt={product.title} className="product-image aspect-[4/5] w-full object-cover" /> : <div className="flex aspect-[4/5] items-center justify-center bg-[#e5e4dd] text-5xl font-medium text-[#b0afa6]">{product.title?.charAt(0)}</div>}
+                    <span className={`absolute right-3 top-3 rounded-full border border-white/70 px-2.5 py-1 text-[9px] uppercase tracking-wider backdrop-blur ${product.stock > 0 ? "bg-white/85 text-[#4f5940]" : "bg-[#272823]/85 text-white"}`}>{product.stock > 0 ? "In stock" : "Sold out"}</span>
                   </Link>
-                  <div className="flex flex-1 flex-col px-2 pb-2 pt-4">
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#8991a8]">{product.category || "Everyday"}</p>
-                    <Link to={`/product/${product._id}`}><h3 className="mt-1.5 line-clamp-2 text-base font-extrabold leading-snug tracking-[-0.02em] transition group-hover:text-[#5368ef]">{product.title}</h3></Link>
-                    <div className="mt-auto flex items-end justify-between gap-4 pt-4"><div><p className="text-lg font-extrabold">${Number(product.price).toFixed(2)}</p><p className="mt-0.5 text-[10px] font-semibold text-[#8991a8]">{product.stock > 0 ? `${product.stock} ready to ship` : "Currently unavailable"}</p></div><button onClick={() => addToCart(product._id)} disabled={product.stock <= 0} aria-label={`Add ${product.title} to cart`} className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl text-xl font-bold transition disabled:cursor-not-allowed disabled:bg-[#e9ebf3] disabled:text-[#a7adbd] ${addedId === product._id ? "bg-[#46b68f] text-white" : "bg-[#19203a] text-white hover:bg-[#5368ef]"}`}>{addedId === product._id ? "✓" : "+"}</button></div>
+                  <div className="flex flex-1 flex-col pt-4">
+                    <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-[#8a8b82]">{product.category || "Everyday"}</p>
+                    <Link to={`/product/${product._id}`}><h3 className="mt-1.5 line-clamp-2 text-base font-medium leading-snug tracking-[-0.02em] group-hover:underline group-hover:underline-offset-4">{product.title}</h3></Link>
+                    <div className="mt-auto flex items-center justify-between gap-4 pt-4"><p className="text-sm font-medium">${Number(product.price).toFixed(2)}</p><button onClick={() => addToCart(product._id)} disabled={product.stock <= 0} className={`border px-3 py-2 text-xs font-medium transition disabled:cursor-not-allowed disabled:border-[#deddd6] disabled:text-[#aaa99f] ${addedId === product._id ? "border-[#6f7655] bg-[#6f7655] text-white" : "border-[#bdbdb4] hover:border-[#171813]"}`}>{addedId === product._id ? "Added" : "Add to cart"}</button></div>
                   </div>
                 </article>
               ))}
@@ -175,13 +159,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 py-20 lg:py-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="overflow-hidden rounded-[28px] bg-gradient-to-r from-[#5368ef] via-[#7958e6] to-[#a74de8] p-7 text-white sm:p-12">
-            <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/65">Shopping, simplified</p>
-            <div className="mt-4 grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-end"><h2 className="text-3xl font-extrabold tracking-[-0.045em] sm:text-5xl">Find it. Add it.<br />It&rsquo;s yours.</h2><div className="grid gap-4 sm:grid-cols-3">{[["01", "Browse", "Search a focused collection."], ["02", "Choose", "Clear prices and stock."], ["03", "Checkout", "A short, simple flow."]].map(([number, title, detail]) => <div key={number} className="rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur"><p className="text-xs font-black text-[#ffdf87]">{number}</p><h3 className="mt-5 font-extrabold">{title}</h3><p className="mt-1 text-xs leading-5 text-white/65">{detail}</p></div>)}</div></div>
-          </div>
-        </div>
+      <section className="border-t border-[#deddd6] bg-[#171813] px-5 py-14 text-white lg:py-18">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-end"><div><p className="text-[10px] uppercase tracking-[0.18em] text-white/50">Our promise</p><h2 className="mt-4 text-3xl font-medium tracking-[-0.04em] sm:text-5xl">Less noise.<br />Better choices.</h2></div><div className="grid gap-px bg-white/15 sm:grid-cols-3">{[["01", "Browse", "A focused, searchable collection."], ["02", "Choose", "Clear prices and current stock."], ["03", "Checkout", "A short, familiar purchase flow."]].map(([number, title, detail]) => <div key={number} className="bg-[#171813] p-5"><p className="text-xs text-white/35">{number}</p><h3 className="mt-8 font-medium">{title}</h3><p className="mt-2 text-xs leading-5 text-white/55">{detail}</p></div>)}</div></div>
       </section>
     </div>
   );
