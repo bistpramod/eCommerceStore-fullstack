@@ -3,6 +3,7 @@ import { Link, useLocation, useOutlet } from "react-router-dom";
 import Navbar from "../src/components/Navbar";
 
 export default function Layout() {
+  const currentYear = new Date().getFullYear();
   const location = useLocation();
   const outlet = useOutlet();
   const nextPage = useRef(outlet);
@@ -70,7 +71,7 @@ export default function Layout() {
           </div>
 
           <div className="mt-16 flex flex-col gap-3 border-t border-[#d8d7d0] pt-6 text-xs leading-5 text-[#85867e] sm:flex-row sm:items-center sm:justify-between lg:mt-20">
-            <p>© 2026 VividVistaa. All rights reserved.</p>
+            <p>© {currentYear} VividVistaa. All rights reserved.</p>
             <p>Considered goods. Straightforward shopping.</p>
           </div>
         </div>
