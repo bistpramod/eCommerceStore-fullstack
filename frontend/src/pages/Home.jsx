@@ -134,7 +134,7 @@ export default function Home() {
           </div>
 
           {loading ? (
-            <div className="mt-8 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{[1, 2, 3, 4].map((item) => <div key={item}><div className="aspect-[4/5] animate-pulse bg-[#e7e6df]" /><div className="mt-4 h-4 animate-pulse bg-[#e7e6df]" /><div className="mt-3 h-3 w-1/3 animate-pulse bg-[#e7e6df]" /></div>)}</div>
+            <div aria-busy="true" aria-label="Loading products" className="mt-8 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{[1, 2, 3, 4].map((item) => <div aria-hidden="true" key={item}><div className="aspect-[4/5] animate-pulse bg-[#e7e6df]" /><div className="mt-4 h-4 animate-pulse bg-[#e7e6df]" /><div className="mt-3 h-3 w-1/3 animate-pulse bg-[#e7e6df]" /></div>)}</div>
           ) : error ? (
             <div className="mt-8 border border-[#d9cbc7] bg-[#f4ece9] p-12 text-center"><p className="font-medium text-[#754f43]">{error}</p><button onClick={loadProducts} className="store-button mt-5 bg-[#171813] px-5 py-3 text-sm text-white">Try again</button></div>
           ) : sortedProducts.length === 0 ? (
