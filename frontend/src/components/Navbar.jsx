@@ -52,7 +52,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
-            {!userId ? <Link to="/login" className="hidden px-3 py-2 text-sm text-[#62635c] transition hover:text-[#171813] sm:block">Log in</Link> : <button onClick={logout} className="hidden px-3 py-2 text-sm text-[#62635c] transition hover:text-[#171813] sm:block">Log out</button>}
+            {!userId ? <Link to="/login" className="hidden px-3 py-2 text-sm text-[#62635c] transition hover:text-[#171813] sm:block">Log in</Link> : <button type="button" onClick={logout} className="hidden px-3 py-2 text-sm text-[#62635c] transition hover:text-[#171813] sm:block">Log out</button>}
             {!userId && <Link to="/signup" className="hidden border border-[#cfcec6] px-4 py-2.5 text-sm font-medium transition hover:border-[#171813] lg:block">Create account</Link>}
             <Link to="/cart" aria-label={`Shopping cart with ${cartCount} items`} className="relative flex h-10 items-center gap-2 rounded-full bg-[#171813] px-4 text-white transition hover:bg-[#6f7655]">
               <svg viewBox="0 0 24 24" fill="none" className="h-[18px] w-[18px]" stroke="currentColor" strokeWidth="1.9"><path d="M3 4h2l2.2 10.1a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L21 7H6" /><circle cx="9" cy="20" r="1" /><circle cx="18" cy="20" r="1" /></svg>
