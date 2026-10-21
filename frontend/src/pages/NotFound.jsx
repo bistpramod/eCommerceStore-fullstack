@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <div className="flex min-h-[75vh] items-center justify-center overflow-hidden px-5 text-center">
       <div className="relative">
-        <p className="text-[9rem] font-bold leading-none tracking-[-0.1em] text-[#e3e5df] sm:text-[13rem]">404</p>
+        <p aria-hidden="true" className="text-[9rem] font-bold leading-none tracking-[-0.1em] text-[#e3e5df] sm:text-[13rem]">404</p>
         <div className="relative -mt-8 sm:-mt-12">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#a65f46]">Wrong turn</p>
           <h1 className="mt-3 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">This page wandered off</h1>
